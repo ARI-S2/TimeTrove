@@ -1,0 +1,56 @@
+@charset "utf-8"; 
+
+/* campland-N23 [EKlT2jLG16] */
+.campland-N23 { overflow: hidden; background-color: var(--highlight-bg1); }
+.campland-N23 .contents-inner { padding: 8rem 1.6rem; }
+.campland-N23 .contents-container { width: 100%; max-width: 84rem; margin: 0 auto; }
+.campland-N23 .textset.textset-sub .textset-tit { font-size: var(--fs-h3); line-height: var(--lh-h3); }
+.campland-N23 .contents-group { padding: 2.4rem; background-color: var(--white); }
+.campland-N23 .contents-group+.contents-group { margin-top: 1.6rem; }
+.campland-N23 .contents-profile { display: flex; align-items: center; justify-content: space-between; }
+.campland-N23 .contents-profile-item { display: flex; align-items: center; }
+.campland-N23 .contents-profile .imageset { width: 4.8rem; height: 4.8rem; }
+.campland-N23 .contents-name { margin-left: 1.6rem; font-size: var(--fs-h5); line-height: var(--lh-h5); font-weight: 500; }
+.campland-N23 .contents-benefit { display: flex; align-items: center; justify-content: center; gap: 8rem; }
+.campland-N23 .contents-benefit-link { position: relative; }
+.campland-N23 .contents-benefit-item .iconset { width: 6rem; height: 6rem; }
+.campland-N23 .contents-benefit-item .contents-text { margin-top: 0.8rem; font-size: var(--fs-p2); line-height: var(--lh-p2); font-weight: 500; text-align: center; }
+.campland-N23 .contents-reservation .contents-tit { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; font-size: var(--fs-h5); line-height: var(--lh-h5); font-weight: 500; }
+.campland-N23 .contents-reservation .contents-more { flex-shrink: 0; font-size: var(--fs-p2); line-height: var(--lh-p2); font-weight: 500; color: var(--text-color5); }
+.campland-N23 .contents-reservation .cardset { align-items: flex-start; padding: 1rem; }
+.campland-N23 .contents-reservation .cardset+.cardset { margin-top: 1.2rem; }
+.campland-N23 .contents-reservation .cardset-figure { width: 8rem; height: 8rem; }
+.campland-N23 .contents-reservation .cardset-body { margin-left: 1.6rem; }
+.campland-N23 .contents-reservation .cardset-txt { margin-left: 0.8rem; }
+.campland-N23 .contents-reservation .cardset-tit { margin-top: 0.4rem; }
+.campland-N23 .contents-notice-link { display: inline-block; position: relative; width: 100%; padding: 1.6rem 2.4rem 1.6rem 0; font-size: var(--fs-p2); line-height: var(--lh-p2); }
+.campland-N23 .contents-notice-link:first-child { padding-top: 0; }
+.campland-N23 .contents-notice-link:last-child { padding-bottom: 0; }
+.campland-N23 .contents-notice-link+.contents-notice-link { border-top: 1px solid var(--border-color); }
+.campland-N23 .contents-notice-link::after { content: ""; position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 2.4rem; height: 2.4rem; background: url("../icons/ico_arrow_right_black.svg") no-repeat center/contain; }
+.campland-N23 .contents-notice-link span { display: block; margin-top: 0.4rem; font-size: var(--fs-p3); line-height: var(--lh-p3); color: var(--text-color4); }
+.campland-N23 .contents-notice-link em { font-style: normal; }
+.campland-N23 .contents-button { margin-top: 4rem; text-align: right; }
+@media (max-width: 992px) {
+ .campland-N23 .contents-inner { padding: 3rem 1.6rem; }
+ .campland-N23 .contents-profile { padding: 2rem; }
+ .campland-N23 .contents-profile .imageset { width: 4rem; height: 4rem; }
+ .campland-N23 .contents-group+.contents-group { margin-top: 0.8rem; }
+ .campland-N23 .contents-benefit { flex-direction: column; align-items: flex-start; gap: 2rem; }
+ .campland-N23 .contents-benefit-item { width: 100%; padding: 0; }
+ .campland-N23 .contents-benefit-link { display: flex; align-items: center; gap: 0.8rem; width: 100%; padding-right: 2rem; }
+ .campland-N23 .contents-benefit-link::after { content: ""; position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 2rem; height: 2rem; background: url("../icons/ico_arrow_right_black.svg") no-repeat center/contain; }
+ .campland-N23 .contents-benefit-item .iconset { width: 4rem; height: 4rem; }
+ .campland-N23 .contents-reservation .cardset { flex-direction: row; }
+ .campland-N23 .contents-reservation .badgeset-wrap { flex-direction: column; }
+ .campland-N23 .contents-reservation .cardset-txt { margin-left: 0; margin-top: 0.4rem; }
+ .campland-N23 .contents-reservation .cardset-figure { width: 6.4rem; height: 6.4rem; }
+ .campland-N23 .contents-reservation .cardset-figure+.cardset-body { margin-top: 0; }
+}
+
+/* campland-N23 [UFlYcY40ve] : 편집됨 */
+.campland-N23[data-bid=UFlYcY40ve] .contents-inner { background-color: var(--highlight-bg1); }
+.campland-N23[data-bid=UFlYcY40ve] .contents-notice-link::after { background: url("../icons/ico_arrow_right_black.svg") no-repeat center/contain; }
+@media (max-width: 992px) {
+ .campland-N23[data-bid=UFlYcY40ve] .contents-benefit-link::after { background: url("../icons/ico_arrow_right_black.svg") no-repeat center/contain; }
+}
