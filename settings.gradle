@@ -1,1 +1,3 @@
 rootProject.name = 'TimeTrove'
+include 'backend'
+include 'frontend'

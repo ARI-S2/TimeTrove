@@ -38,5 +38,5 @@ out/
 
 # Custom entry to exclude
 src/main/generated/
-src/main/reactfront/src/components/member/process.env
+frontend/src/components/member/process.env
 src/main/java/com/timetrove/Project/common/config/auth/JwtProperties.java
