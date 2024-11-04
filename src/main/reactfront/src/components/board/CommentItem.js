@@ -107,7 +107,6 @@ const CommentItem = ({ comment, userId, profile, nickname, replyInsert, depth })
                     >
                     </div>
                 ) : (
-                    // *** Change 2: Use dangerouslySetInnerHTML for rendering saved content ***
                     <div dangerouslySetInnerHTML={{ __html: comment.content }} />
                 )}
             </div>
@@ -156,7 +155,7 @@ const CommentItem = ({ comment, userId, profile, nickname, replyInsert, depth })
                             profile={profile}
                             nickname={nickname}
                             replyInsert={replyInsert}
-                            depth={depth + 1} // Increment depth for child comments
+                            depth={depth + 1}
                         />
                     ))}
                 </div>

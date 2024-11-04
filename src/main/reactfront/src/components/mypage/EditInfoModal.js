@@ -13,7 +13,7 @@ function EditInfoModal({ closeModal }) {
     const { data: userData, error, isLoading } = useUserData();
 
     const mutation = useMutation(async (formData) => {
-        const response = await apiClient.put('/mypage/user', formData, {
+        const response = await apiClient.put('/user/update', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

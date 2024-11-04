@@ -1,151 +1,154 @@
 package com.timetrove.Project.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-import com.timetrove.Project.common.config.auth.JwtProperties;
+import com.timetrove.Project.common.enumType.ErrorCode;
+import com.timetrove.Project.common.exception.EntityNotFoundException;
 import com.timetrove.Project.domain.User;
-import com.timetrove.Project.dto.user.KakaoProfile;
-import com.timetrove.Project.dto.user.OauthToken;
+
 import com.timetrove.Project.dto.user.UserDto;
 import com.timetrove.Project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
-	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final UserRepository userRepository;
-	private final RestTemplate rt; // POST 방식으로 key=value 데이터 요청 
-	private static final String KAKAO_REDIRECT_URI = "http://localhost:3000/login/oauth2/callback/kakao";
-	
-	//환경 변수 가져오기
-	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    private String client_id;
+    private static final String USER_CACHE_NAME = "userCache";
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    private String client_secret;
-
-    public OauthToken getAccessToken(String code) {
-        // HttpHeader 오브젝트 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        // HttpBody 오브젝트 생성
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", client_id);
-        params.add("redirect_uri", KAKAO_REDIRECT_URI);
-        params.add("code", code);
-        params.add("client_secret", client_secret);
-
-        // HttpHeader 와 HttpBody 정보를 하나의 오브젝트에 담음
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
-                new HttpEntity<>(params, headers);
-
-        // Http 요청 (POST 방식) 후, response 변수의 응답을 받음
-        ResponseEntity<String> accessTokenResponse = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        // JSON 응답을 객체로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        OauthToken oauthToken = null;
-        try {
-            oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return oauthToken;
-    }
-
-    public KakaoProfile findProfile(String token) {
-        // HttpHeader 오브젝트 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        // HttpHeader 와 HttpBody 정보를 하나의 오브젝트에 담음
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest =
-                new HttpEntity<>(headers);
-
-        // Http 요청 (POST 방식) 후, response 변수의 응답을 받음
-        ResponseEntity<String> kakaoProfileResponse = rt.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoProfileRequest,
-                String.class
-        );
-
-        // JSON 응답을 객체로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoProfile kakaoProfile = null;
-        try {
-            kakaoProfile = objectMapper.readValue(kakaoProfileResponse.getBody(), KakaoProfile.class);
-            logger.info("Kakao Profile: {}", kakaoProfile);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return kakaoProfile;
-    }
-
+    /**
+     * 사용자 정보 조회 메서드 (캐시 사용)
+     * @param: Long userCode - 사용자 코드
+     * @return UserDto
+     */
+    @Cacheable(value = USER_CACHE_NAME, key = "#userCode", unless = "#result == null")
     public UserDto getUserById(Long userCode) {
-        User user = userRepository.findById(userCode).orElseThrow(() -> new RuntimeException("User not found"));
+        log.debug("Cache miss 발생한 사용자: {}", userCode);
+        return UserDto.convertUserToDto(findUserByIdOrThrow(userCode));
+    }
+
+    /**
+     * 사용자 정보 수정 메서드
+     * @param: Long userCode - 사용자 코드
+     * @param: MultipartFile profileImage - 프로필 이미지 파일
+     * @param: String kakaoNickname - 카카오 닉네임
+     * @return 수정된 UserDto
+     */
+    @Transactional
+    @CachePut(value = USER_CACHE_NAME, key = "#userCode")
+    public UserDto updateUserInfo(Long userCode, MultipartFile profileImage, String kakaoNickname) {
+        User user = findUserByIdOrThrow(userCode);
+
+        boolean isUpdated = false;
+
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String profileImageUrl = saveProfileImage(profileImage);
+            user.setKakaoProfileImg(profileImageUrl);
+            isUpdated = true;
+        }
+
+        if (!Objects.equals(user.getKakaoNickname(), kakaoNickname)) {
+            user.setKakaoNickname(kakaoNickname);
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            user = userRepository.save(user);
+        }
+
         return UserDto.convertUserToDto(user);
     }
 
-    public String SaveUserAndGetToken(String token) {
-        KakaoProfile profile = findProfile(token);
+    /**
+     * 사용자 캐시 삭제 메서드
+     * @param: Long userCode - 사용자 코드
+     */
+    @CacheEvict(value = USER_CACHE_NAME, key = "#userCode")
+    public void deleteUserCache(Long userCode) {
+        log.debug("사용자에 대한 {} 캐시 삭제 ", userCode);
+    }
 
-        User user = userRepository.findByUserCode(profile.getId());
-        if(user == null) {
-            user = User.builder()
-                    .userCode(profile.getId())
-                    .kakaoProfileImg(profile.getKakao_account().getProfile().getProfile_image_url())
-                    .kakaoNickname(profile.getKakao_account().getProfile().getNickname())
-                    .userRole("ROLE_USER").build();
+    /**
+     * 프로필 이미지 저장 메서드
+     * @param: MultipartFile profileImage - 프로필 이미지 파일
+     * @return 저장된 파일 경로 문자열
+     */
+    private String saveProfileImage(MultipartFile profileImage) {
+        try {
+            String folder = "uploads/";
+            Path folderPath = Paths.get(folder);
+            if (!Files.exists(folderPath)) {
+                Files.createDirectories(folderPath);
+            }
 
-            userRepository.save(user);
+            String fileName = UUID.randomUUID() +
+                    getFileExtension(profileImage.getOriginalFilename());
+            Path filePath = folderPath.resolve(fileName);
+            Files.write(filePath, profileImage.getBytes());
+
+            return filePath.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패", e);
         }
-
-        return createToken(user);
     }
 
-    public String createToken(User user) {
-        // Jwt 생성 후 헤더에 추가해서 보내줌
-        String jwtToken = JWT.create()
-                .withSubject(String.valueOf(user.getUserCode()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
-                .withClaim("id", user.getUserCode())
-                .withClaim("nickname", user.getKakaoNickname())
-                .withClaim("roles", user.getUserRole())
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
-
-        return jwtToken;
+    /**
+     * 파일 확장자 가져오는 메서드
+     * @param: String fileName - 파일명
+     * @return 파일 확장자 문자열
+     */
+    private String getFileExtension(String fileName) {
+        return Optional.ofNullable(fileName)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(fileName.lastIndexOf(".")))
+                .orElse("");
     }
-    
+
+    /**
+     * 사용자 프로필 이미지 바이너리 데이터 반환 메서드
+     * @param: Long userCode - 사용자 코드
+     * @return 프로필 이미지 바이너리 데이터
+     * @throws IOException 파일 읽기 실패 시 예외 발생
+     */
+    public byte[] getUserProfileImage(Long userCode) throws IOException {
+        User user = findUserByIdOrThrow(userCode);
+        String profileImagePath = user.getKakaoProfileImg();
+        if (profileImagePath != null && !profileImagePath.isEmpty()) {
+            Path imagePath = Paths.get(profileImagePath);
+
+            if (Files.exists(imagePath)) {
+                return Files.readAllBytes(imagePath);
+            }
+        }
+        return new byte[0];
+    }
+
+    /**
+     * 사용자 조회 메서드
+     * 사용자가 없을 시 예외 발생 (USER_NOT_FOUND)
+     * @param: Long userCode - 사용자 코드
+     * @return User 객체
+     */
+    private User findUserByIdOrThrow(Long userCode) {
+        return userRepository.findById(userCode)
+                .orElseThrow(() -> new EntityNotFoundException(HttpStatus.NOT_FOUND, ErrorCode.USER_NOT_FOUND));
+    }
 }

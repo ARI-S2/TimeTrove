@@ -1,54 +1,45 @@
 package com.timetrove.Project.controller;
-import java.util.*;
 
-import com.timetrove.Project.domain.Board;
+import com.timetrove.Project.dto.BoardDto;
+import com.timetrove.Project.dto.PageResponse;
 import com.timetrove.Project.service.BoardService;
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import lombok.RequiredArgsConstructor;
 
 
 @RestController
+@RequestMapping("/boards")
 @RequiredArgsConstructor
 public class BoardController {
-   private final BoardService service;
-   
-   @GetMapping("/board/list")
-   public ResponseEntity<Map> boardList(
+
+   private final BoardService boardService;
+
+    /**
+     * @param page 페이지 번호
+     * @param searchWord 검색어 (옵션)
+     * @return 페이지별 게시글 목록
+     */
+   @Operation(summary = "게시글 목록 조회", description = "검색어와 페이지 번호를 사용해 게시판 목록을 조회합니다.")
+   @GetMapping
+   public ResponseEntity<PageResponse<BoardDto>> boardList(
 		   @RequestParam("page") int page,
 		   @RequestParam(value = "searchWord", required = false) String searchWord) {
 
-	   if (searchWord == null) 
-		   searchWord = ""; 
-	   Map map = new HashMap();
-	   try
-	   {
-		   map = service.findBoardList(page,searchWord);
-	   }catch(Exception ex)
-	   {
-		   return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-	   }
-	   return new ResponseEntity<>(map,HttpStatus.OK);
+       PageResponse<BoardDto> pageResponse = boardService.findBoardList(page, searchWord);
+	   return ResponseEntity.ok().body(pageResponse);
    }
-   
-   @GetMapping("/board/detail/{no}")
-   public ResponseEntity<Board> boardDetailData(@PathVariable("no") Long no){
-	    Board board = null;
- 	    try
- 	    {
- 	    	board = service.getBoardByNO(no);
- 	    }catch(Exception ex)
- 	    {
- 	    	return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
- 	    }
- 	    return new ResponseEntity<>(board,HttpStatus.OK);
-   }
-   
 
+    /**
+     * @param no 게시글 번호
+     * @return 게시글 상세 정보
+     */
+    @Operation(summary = "게시글 상세 조회", description = "특정 번호의 게시글을 조회하고 조회수를 증가합니다.")
+    @GetMapping("/{no}")
+   public ResponseEntity<BoardDto> boardDetailData(@PathVariable("no") Long no){
+	   return ResponseEntity.ok().body(boardService.getBoardByNo(no));
+   }
 }

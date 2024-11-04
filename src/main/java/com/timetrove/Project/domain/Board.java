@@ -1,29 +1,37 @@
 package com.timetrove.Project.domain;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
 
-import org.hibernate.annotations.DynamicUpdate;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import lombok.Data;
 
+@Getter
+@NoArgsConstructor
 @Entity
-@Data
-@DynamicUpdate
 public class Board {
 	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
+
     private String subject;
+
     private String content;
-    @Column(insertable = true,updatable = false)
-    private String regdate;
-    
-    @PrePersist
-    public void regdate() {
-    	this.regdate=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
+    @CreationTimestamp
+    private Timestamp createdAt;
+
+    @Column(columnDefinition = "integer default 0")
+    private int score;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_code", nullable = false)
+    private User user;
+
+    public void increaseScore() {
+        this.score += 1;
     }
 }

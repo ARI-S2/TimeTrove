@@ -5,6 +5,7 @@ import java.util.List;
 import com.timetrove.Project.domain.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommentRepository extends JpaRepository<Comment,Long>, CustomCommentRepository {
+public interface CommentRepository extends JpaRepository<Comment,Long>, CommentRepositoryCustom {
+
     List<Comment> findByUserUserCodeOrderByCreatedAtDesc(Long userCode);
 }

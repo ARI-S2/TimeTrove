@@ -4,8 +4,8 @@ import com.timetrove.Project.domain.Comment;
 
 import java.util.List;
 
-public interface CustomCommentRepository {
+public interface CommentRepositoryCustom {
 	
-    public List<Comment> findCommentByNo(Long no);
+    List<Comment> findCommentByNo(Long no);
 
 }

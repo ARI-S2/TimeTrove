@@ -5,15 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.timetrove.Project.domain.Board;
-import com.timetrove.Project.domain.User;
-
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -28,19 +24,21 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    private Long id; // 댓글 고유 번호
+    private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_code")
-    private User user; // 댓글 작성자
+    private User user;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "no")
     private Board board;
-    
+
+
     @Column(nullable = false)
+    @Setter
     @Lob
-    private String content; // 댓글 내용
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -51,13 +49,8 @@ public class Comment {
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private String createdAt;
-    
-    
-    public void setContent(String content) {
-		this.content = content;
-	}
 
-	@Builder
+    @Builder
     public Comment(Board board, String content, User user, Comment parent) {
         this.board = board;
         this.content = content;

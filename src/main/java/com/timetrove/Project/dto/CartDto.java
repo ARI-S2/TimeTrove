@@ -20,29 +20,30 @@ public class CartDto {
     private Long id;
     private Long userCode;
     @NonNull
-    private Long watchNo;
+    private Long watchId;
     private String watchName;
     private String watchImage;
-	private int watchPrice;
+	private Long watchPrice;
 	private String watchModel;
 	
-    private int quantity;
+    private Long quantity;
     private boolean purchased;
     private LocalDateTime purchaseDate;
-    private int totalPrice;
+    private Long totalPrice;
+
 
     public static CartDto convertCartToDto(Cart cart) {
         CartDto cartDto = new CartDto();
         cartDto.setId(cart.getId());
-        cartDto.setWatchNo(cart.getWatch().getNo());
+        cartDto.setWatchId(cart.getWatch().getId());
         cartDto.setWatchName(cart.getWatch().getName());
         cartDto.setWatchImage(cart.getWatch().getImage());
-        cartDto.setWatchPrice(cart.getWatch().getS_price());
+        cartDto.setWatchPrice(cart.getWatch().getSoldPrice());
         cartDto.setWatchModel(cart.getWatch().getModel());
         cartDto.setQuantity(cart.getQuantity());
         cartDto.setPurchased(cart.isPurchased());
         cartDto.setPurchaseDate(cart.getPurchaseDate());
-        cartDto.setTotalPrice(cart.getQuantity() * cart.getWatch().getS_price());
+        cartDto.setTotalPrice(cart.getQuantity() * cart.getWatch().getSoldPrice());
         return cartDto;
     }
     

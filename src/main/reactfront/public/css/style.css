@@ -12,17 +12,17 @@
 .basic-N1.header-menuactive .header-lang { display: none; }
 .basic-N1 .header-inner { position: relative; width: 100%; height: 8rem; background-color: var(--white); }
 .basic-N1 .header-inner::before { content: ''; position: absolute; top: 0; left: 0; height: 8rem; width: 100%; background-color: var(--white); z-index: -1; transition: 0.3s; }
-.basic-N1 .header-container { display: flex; justify-content: space-between; height: 100%; padding: 2.4rem 8rem; }
+.basic-N1 .header-container { display: flex; justify-content: space-between; height: 100%; padding: 0rem 8rem; }
 .basic-N1 .header-title a { width: 10.6rem; height: 3.3rem; }
 .basic-N1 .header-title img { width: 100%; height: 100%; object-fit: contain; }
 .basic-N1 .header-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .basic-N1 .header-mobile-top { display: none; }
-.basic-N1 .header-gnblist { display: flex; }
+.basic-N1 .header-gnblist { display: flex; margin-bottom: 0px;}
 .basic-N1 .header-gnbitem:hover .header-gnblink span::after,.basic-N1 .header-gnbitem.item-active .header-gnblink span::after { content: ''; display: inline-block; position: absolute; left: 0; top: 100%; background-color: var(--primary); transform: scaleX(1); }
 .basic-N1 .header-gnbitem+.header-gnbitem .header-gnblink { padding-left: 3rem; }
 .basic-N1 .header-gnbitem:last-child .header-gnblink { padding-right: 0; }
 .basic-N1 .header-gnblink { padding-right: 3rem; font-size: var(--fs-p3); line-height: var(--lh-p3); font-weight: 500; text-align: center; white-space: nowrap; }
-.basic-N1 .header-gnblink span { position: relative; }
+.basic-N1 .header-gnblink span { position: relative; font-size: larger;}
 .basic-N1 .header-gnblink span::after { content: ''; height: 0.2rem; width: 100%; transition: 0.3s; transform: scaleX(0); }
 .basic-N1 .header-right { display: flex; align-items: center; }
 .basic-N1 .header-lang { position: relative; font-size: var(--fs-p4); }
@@ -1001,10 +1001,10 @@
 }
 
 .profile-image {
- width: 45px; /* 원하는 크기로 조정 가능 */
- height: 45px; /* 원하는 크기로 조정 가능 */
+ width: 45px;
+ height: 45px;
  border-radius: 50%;
- margin-right: 10px; /* 닉네임과 이미지 사이의 간격 조정 */
+ margin-right: 10px;
 }
 
 .reply-list .mention-badge {
@@ -1502,4 +1502,13 @@
 .campland-N23 .btn-close{
  margin-left: 660px;
  padding: 3px
+}
+
+.remove-btn {
+ display: flex;
+ justify-content: flex-end;
+}
+
+.remove-btn img {
+ width: 2.5rem;
 }

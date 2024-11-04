@@ -1,5 +1,6 @@
 package com.timetrove.Project.dto.user;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class UserDto implements Serializable {
     private Long userCode;
     private String kakaoProfileImg;
     private String kakaoNickname;

@@ -8,15 +8,15 @@ import { requestPay } from "../util/payment";
 
 function WatchDetail(){
 
-    const {no} = useParams()
+    const { id } = useParams();
     const userId = getCookie('id');
     const [amount, setAmount] = useState(1);
     const navigate = useNavigate();
 
-
-    const {isLoading,isError,error,data,refetch:watchDetail} = useQuery(['watch-detail',no],
+    const {isLoading,isError,error,data,refetch:watchDetail} = useQuery(
+        ['watch-detail',id],
         async () => {
-            const response = await apiClient.get(`/watch/detail/${no}`)
+            const response = await apiClient.get(`/watches/${id}`)
             return response.data;
         }
     )
@@ -27,16 +27,16 @@ function WatchDetail(){
 
     // 쿠키에 저장
     if (userId) {
-        setCookie(userId + "_watch" + no, data.image);
+        setCookie(userId + "_watch" + id, data.image);
     } else {
-        setCookie("guest_watch" + no, data.image, { maxAge: 24 * 60 * 60 });
+        setCookie("guest_watch" + id, data.image, { maxAge: 24 * 60 * 60 });
     }
 
     const handleIncrease = () => setAmount(prev => prev + 1);
     const handleDecrease = () => setAmount(prev => prev > 1 ? prev - 1 : 1);
 
     const cartDto = {
-        watchNo: no,
+        watchId: id,
         quantity: amount
     };
 
@@ -46,7 +46,7 @@ function WatchDetail(){
             navigate(KAKAO_AUTH_URL);
         } else {
             try {
-                await apiClient.post('/mypage/cart', cartDto);
+                await apiClient.post('/cart', cartDto);
                 alert('장바구니에 추가 성공');
                 window.location.href = '/mypage';
             } catch (error) {
@@ -61,11 +61,11 @@ function WatchDetail(){
             alert('로그인이 필요합니다.');
             navigate(KAKAO_AUTH_URL);
         } else {
-            requestPay(totalPrice, data.name, userId, '/mypage/purchase-direct', cartDto);
+            requestPay(totalPrice, data.name, userId, '/cart/purchases', cartDto);
         }
     };
 
-    const totalPrice = data.s_price * amount;
+    const totalPrice = data.soldPrice * amount;
     
     return (
         <div className="basic-N51" data-bid="ILlXsW0AmY">
@@ -77,8 +77,8 @@ function WatchDetail(){
                                  src={data.image} alt="썸네일이미지"/>
                         </div>
                         <ul className="contents-thumblist">
-                            {data.dimages &&
-                                data.dimages.map((dimage) =>
+                            {data.dimagesArray &&
+                                data.dimagesArray.map((dimage) =>
                                 <li className="contents-thumbitem">
                                     <img className="contents-thumbimg"
                                          src={dimage} alt="썸네일이미지"/>
@@ -116,9 +116,9 @@ function WatchDetail(){
                                 textDecoration: "line-through",
                                 fontSize: "larger"
                             }}>
-                                {Number(data.c_price).toLocaleString()}
+                                {Number(data.consumerPrice).toLocaleString()}
                             </p>
-                            <p className="contents-price">{Number(data.s_price).toLocaleString()} <span>원</span>
+                            <p className="contents-price">{Number(data.soldPrice).toLocaleString()} <span>원</span>
                             </p>
                         </div>
                         <div className="contents-right-group">
@@ -176,8 +176,8 @@ function WatchDetail(){
                     </div>
                 </div>
             </div>
-            {data.dimages &&
-                data.dimages.map((dimage) =>
+            {data.dimagesArray &&
+                data.dimagesArray.map((dimage) =>
                     <div className="image-container">
                         <img className="image-contents-thumbimg"
                              src={dimage} alt="썸네일이미지"/>

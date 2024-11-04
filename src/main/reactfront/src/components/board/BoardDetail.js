@@ -14,7 +14,7 @@ function BoardDetail() {
 
     const { isLoading, isError, error, data: boardData, refetch: boardDetail } = useQuery(['board-detail', no],
         async () => {
-            const response = await apiClient.get(`/board/detail/${no}`);
+            const response = await apiClient.get(`/boards/${no}`);
             return response.data;
         }
     );
@@ -44,14 +44,19 @@ function BoardDetail() {
                     <div className="textset textset-sub">
                         <h2 className="textset-tit">{boardData.subject}</h2>
                         <p className="textset-desc">
-                            관리자 <span>{boardData.regdate}</span>
+                            관리자 <span>{boardData.creatAt}</span>
                         </p>
                     </div>
                     <div className="contents-body">
-                        <p className="contents-text">{boardData.content}</p>
+                        {boardData.content.split('\n').map((line, index) => (
+                            <span className="contents-text" key={index}>
+                                    {line}
+                                <br />
+                            </span>
+                        ))}
                     </div>
                     <div className="contents-link">
-                        <a href="../notice/list.do" className="btnset btnset-round btnset-line btnset-black">
+                        <a href="/boards" className="btnset btnset-round btnset-line btnset-black">
                             목록으로
                         </a>
                     </div>

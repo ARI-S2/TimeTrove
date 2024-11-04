@@ -51,7 +51,9 @@ const MyPage = () => {
         console.log(newCartItems[index])
 
         try {
-            await apiClient.put(`/mypage/cart/${newCartItems[index].id}`, { watchNo: newCartItems[index].watchNo, quantity: newCartItems[index].quantity });
+            await apiClient.put(`/cart/${newCartItems[index].id}`,
+                            { watchId: newCartItems[index].watchId,
+                                   quantity: newCartItems[index].quantity });
         } catch (error) {
             console.error('Error updating cart item:', error);
         }
@@ -64,7 +66,9 @@ const MyPage = () => {
             setCartItems(newCartItems);
 
             try {
-                await apiClient.put(`/mypage/cart/${newCartItems[index].id}`, { watchNo: newCartItems[index].watchNo,  quantity: newCartItems[index].quantity });
+                await apiClient.put(`/cart/${newCartItems[index].id}`,
+                            { watchId: newCartItems[index].watchId,
+                                   quantity: newCartItems[index].quantity });
             } catch (error) {
                 console.error('Error updating cart item:', error);
             }
@@ -77,7 +81,7 @@ const MyPage = () => {
         setCartItems(newCartItems);
 
         try {
-            await apiClient.delete(`/mypage/cart/${cartItemId}`);
+            await apiClient.delete(`/cart/${cartItemId}`);
         } catch (error) {
             console.error('Error deleting cart item:', error);
         }
@@ -90,13 +94,12 @@ const MyPage = () => {
     };
 
     const handlePurchase = async () => {
-        const cartIds = cartItems
-            .filter(item => item.checked)
-            .map(item => item.id);
+        const cartDtoList = cartItems
+            .filter(item => item.checked);
+            //.map(item => item.id);
 
         try {
-            requestPay(totalPrice, 'TimeTrove 시계', user.nickname, '/mypage/purchases', cartIds);
-            // 구매 완료 후에 장바구니를 다시 불러오거나 다른 후속 작업을 수행할 수 있습니다.
+            requestPay(totalPrice, 'TimeTrove 시계', user.nickname, '/cart/purchases', cartDtoList);
             userRefetch();
         } catch (error) {
             console.error('Error purchasing items:', error);
@@ -189,13 +192,13 @@ const MyPage = () => {
                                                     </div>
                                                 </div>
                                                 <div className="contents-right" style={{width: 'auto'}}>
-                                                    {/* 삭제 버튼 추가 */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleDelete(index)}
-                                                    >
-                                                        삭제
-                                                    </button>
+                                                    <div className="contents-right-group remove-btn">
+                                                        <img
+                                                            src={process.env.PUBLIC_URL + "/icons/remove.png"}
+                                                            alt="삭제 아이콘"
+                                                            onClick={() => handleDelete(index)}
+                                                        />
+                                                    </div>
                                                     <div className="contents-right-group">
                                                         <div className="contents-brand">
                                                             <a href="javascript:void(0);">{cart.watchModel}</a>

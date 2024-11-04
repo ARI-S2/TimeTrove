@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {fetchProfileImage } from '../util/api';
 import {useUserData} from "../member/authHooks";
-import { logout } from "../util/cookie";
+import {getCookie, logout} from "../util/cookie";
 import { KAKAO_AUTH_URL } from "../member/OAuth";
+import apiClient from "../../http-commons";
 
 function Header() {
+    const navigate = useNavigate();
     const [profileImageUrl, setProfileImageUrl] = useState(null);
 
     const { data: userData, error, isLoading, refetch } = useUserData();
@@ -20,10 +22,16 @@ function Header() {
         }
     }, [userData])
 
-    const handleLogout = () => {
-        logout();
-        refetch();
-        window.location.reload();
+    const handleLogout = async () => {
+        try {
+            //await apiClient.post(`/logout`);
+            logout();
+            refetch();
+            navigate("/");
+            window.location.reload();
+        } catch (error) {
+            console.error('로그아웃 실패:', error);
+        }
     };
 
     if (isLoading) return <div>Loading...</div>;
@@ -32,41 +40,26 @@ function Header() {
         <header className="basic-N1" data-bid="TpLUAv0Rob">
             <div className="header-inner">
                 <div className="header-container container-lg">
-                    <h1 className="header-title">
+                    <h2 className="header-title">
                         <a href="/">
-                            <img src={process.env.PUBLIC_URL + "/images/img_logo_black.png"} alt="로고"/>
+                            TimeTrove
                         </a>
-                    </h1>
+                    </h2>
                     <div className="header-center">
                         <div className="header-title header-mobile-top">
                             <a href="/">
-                                <img src={process.env.PUBLIC_URL + "/images/img_logo_black.png"} alt="로고"/>
+                                TimeTrove
                             </a>
                         </div>
                         <ul className="header-gnblist">
                             <li className="header-gnbitem">
-                                <a className="header-gnblink" href="/company">
-                                    <span>회사소개</span>
-                                </a>
-                            </li>
-                            <li className="header-gnbitem">
-                                <a className="header-gnblink" href="/business">
-                                    <span>사업소개</span>
-                                </a>
-                            </li>
-                            <li className="header-gnbitem">
-                                <a className="header-gnblink" href="/products">
+                                <a className="header-gnblink" href="/watches">
                                     <span>제품소개</span>
                                 </a>
                             </li>
                             <li className="header-gnbitem">
-                                <a className="header-gnblink" href="/press">
-                                    <span>홍보센터</span>
-                                </a>
-                            </li>
-                            <li className="header-gnbitem">
-                                <a className="header-gnblink" href="/customer-service">
-                                    <span>고객센터</span>
+                                <a className="header-gnblink" href="/boards">
+                                    <span>커뮤니티</span>
                                 </a>
                             </li>
                         </ul>
@@ -94,15 +87,6 @@ function Header() {
                                     <img src={process.env.PUBLIC_URL + `/icons/kakao_login.png`} alt={"kakaoLogin"}/>
                                 </Link>
                             )}
-                            {/*<button className="header-langbtn">KOR</button>
-                            <ul className="header-langlist">
-                                <li className="header-langitem">
-                                    <a href="/">KOR</a>
-                                </li>
-                                <li className="header-langitem">
-                                    <a href="/">ENG</a>
-                                </li>
-                            </ul>*/}
                         </div>
                         <div className="header-utils">
                             <button className="btn-allmenu">

@@ -28,17 +28,17 @@ public class Cart {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "watch_no", referencedColumnName = "no")
+    @JoinColumn(name = "watch_id", referencedColumnName = "watch_id")
     private Watch watch;
 
-    private int quantity;
+    private Long quantity;
     private boolean purchased;
     
     @Column(name = "purchase_date")
     private LocalDateTime purchaseDate;
 
     @Builder
-    public Cart(User user, Watch watch, int quantity, boolean purchased, LocalDateTime purchaseDate) {
+    public Cart(User user, Watch watch, Long quantity, boolean purchased, LocalDateTime purchaseDate) {
         this.user = user;
         this.watch = watch;
         this.quantity = quantity;

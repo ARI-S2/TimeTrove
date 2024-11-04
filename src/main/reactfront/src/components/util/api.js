@@ -9,7 +9,7 @@ export const fetchProfileImage = async (userCode) => {
         }
         return null;
     } catch (error) {
-        console.error('Error fetching profile image:', error);
+        console.error('프로필 이미지를 가져오는데 실패했습니다.:', error);
         throw error;
     }
 };

@@ -7,7 +7,6 @@ const CommentContainer = ({ boardNo, userId, profile, nickname }) => {
     const [msg, setMsg] = useState('');
     const [comments, setComments] = useState([]);
     const msgRef = useRef(null);
-    const queryClient = useQueryClient();
 
     const { data: commentsData, refetch: commentsRefetch } = useQuery(['comments', boardNo],
         async () => {
@@ -74,7 +73,7 @@ const CommentContainer = ({ boardNo, userId, profile, nickname }) => {
                         profile={profile}
                         nickname={nickname}
                         replyInsert={replyInsert}
-                        depth={0} // Top-level comment
+                        depth={0}
                     />
                 ))}
             </div>

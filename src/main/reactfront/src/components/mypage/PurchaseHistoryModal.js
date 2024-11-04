@@ -4,7 +4,7 @@ import apiClient from "../../http-commons";
 
 function PurchaseHistoryModal({ closeModal }) {
     const { data: purchaseHistory, error, isLoading } = useQuery('purchaseHistory', async () => {
-        const response = await apiClient.get('/mypage/purchases');
+        const response = await apiClient.get('/cart/purchase_history');
         console.log(response.data);
         return response.data;
     });
@@ -17,7 +17,13 @@ function PurchaseHistoryModal({ closeModal }) {
 
     return (
         <div className="campland-N23" data-bid="UFlYcY40ve" style={{textAlign: "left"}}>
-            <button className="btn-close" onClick={closeModal}>닫기</button>
+            <div className="contents-right-group remove-btn">
+                <img
+                    src={process.env.PUBLIC_URL + "/icons/close.png"}
+                    alt="닫기 아이콘"
+                    onClick={closeModal}
+                />
+            </div>
             <div className="contents-group contents-reservation">
                 <h2>최근 구매내역</h2>
                 <hr/>

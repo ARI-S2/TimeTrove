@@ -3,7 +3,6 @@ import apiClient from '../../http-commons'
 import {Link} from "react-router-dom";
 import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
 import 'swiper/swiper-bundle.min.css';
-import { useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
 
@@ -42,9 +41,10 @@ function Home(){
                                         <a className="content-link container-md" href="javascript:void(0);">
                                             <div className="contents-slide-group">
                                                 <div className="textset textset-visual">
-                                                    <h2 className="textset-tit" style={{color : "white"}}>Temha Portfolio</h2>
-                                                    <p className="textset-desc">지속적인 학습과 개발을 통해 최신 기술과 트렌드를 적용하여 혁신적인
-                                                        결과물을 제시했습니다.</p>
+                                                    <h2 className="textset-tit" style={{color : "white"}}>Time Trove</h2>
+                                                    <p className="textset-desc">
+                                                        고급스러운 디자인부터 실용적인 모델까지, 당신의 취향에 맞는 완벽한 시계를 찾아 당신의 시간에 특별함을 더하세요.
+                                                    </p>
                                                 </div>
                                             </div>
                                         </a>
@@ -77,8 +77,8 @@ function Home(){
                     <div className="contents-inner">
                         <div className="contents-container container-md">
                             <div className="textset">
-                                <h2 className="textset-tit">Best Product</h2>
-                                <p className="textset-desc">베스트 상품을 지금 바로 만나보세요!</p>
+                                <h2 className="textset-tit">실시간 인기상품</h2>
+                                <p className="textset-desc">현재 고객님들께 가장 사랑받고 있는 인기상품을 소개합니다. 최신 트렌드와 뛰어난 기능성을 갖춘 시계를 만나보세요!</p>
                             </div>
                             <div className="swiper contents-swiper">
                                 <Swiper
@@ -96,10 +96,10 @@ function Home(){
                                     onSwiper={(swiper) => console.log(swiper)}
                                     onSlideChange={() => console.log('slide change')}
                                 >
-                                    {data.wList && data.wList.map((watch) => (
-                                        <SwiperSlide key={watch.no}>
+                                    {data.topWatchList && data.topWatchList.map((watch) => (
+                                        <SwiperSlide key={watch.id}>
                                             <div className="swiper-slide" data-swiper-slide-index="0">
-                                                <Link to={"/watch/detail/" + watch.no}
+                                                <Link to={"/watches/" + watch.id}
                                                       className="cardset cardset-shopping">
                                                     <figure className="cardset-figure">
                                                         <img
@@ -111,7 +111,7 @@ function Home(){
                                                     <div className="cardset-body">
                                                         <span className="cardset-name">{watch.model}</span>
                                                         <h2 className="cardset-tit">{watch.name}</h2>
-                                                        <p className="cardset-desc">{Number(watch.s_price).toLocaleString()}<small>원</small>
+                                                        <p className="cardset-desc">{Number(watch.soldPrice).toLocaleString()}<small>원</small>
                                                         </p>
                                                     </div>
                                                 </Link>
@@ -141,226 +141,6 @@ function Home(){
                         </div>
                     </div>
                 </div>
-                {/*
-                <div className="basic-N42" data-bid="HHlUaV8w2c">
-                    <div className="contents-inner">
-                        <div className="contents-container container-md">
-                            <div className="textset">
-                                <h2 className="textset-tit">Best Product</h2>
-                                <p className="textset-desc">베스트 상품을 지금 바로 만나보세요!</p>
-                            </div>
-                            <div
-                                className="swiper contents-swiper swiper-initialized swiper-horizontal swiper-pointer-events">
-                                <div className="swiper-wrapper" id="swiper-wrapper-a2c1438ecb8fa257" aria-live="off"
-                                     style={{transform: "translate3d(-2352px, 0px, 0px)", transitionDuration: "0ms"}}>
-                                    <div className="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="0"
-                                         role="group" aria-label="1 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_1.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="1"
-                                         role="group" aria-label="2 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_2.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="2"
-                                         role="group" aria-label="3 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_3.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-prev"
-                                         data-swiper-slide-index="3" role="group" aria-label="4 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_4.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate-active"
-                                         data-swiper-slide-index="0" role="group" aria-label="1 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_1.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate-next"
-                                         data-swiper-slide-index="1" role="group" aria-label="2 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_2.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide" data-swiper-slide-index="2" role="group"
-                                         aria-label="3 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_3.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-prev" data-swiper-slide-index="3"
-                                         role="group" aria-label="4 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_4.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate swiper-slide-active"
-                                         data-swiper-slide-index="0" role="group" aria-label="1 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_1.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate swiper-slide-next"
-                                         data-swiper-slide-index="1" role="group" aria-label="2 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_2.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="2"
-                                         role="group" aria-label="3 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_3.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div className="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-prev"
-                                         data-swiper-slide-index="3" role="group" aria-label="4 / 4">
-                                        <a href="javascript:void(0);" className="cardset cardset-shopping">
-                                            <figure className="cardset-figure">
-                                                <img className="cardset-img"
-                                                     src={process.env.PUBLIC_URL + "/images/img_basic_N42_4.png"}
-                                                     alt="스와이퍼 이미지"/>
-                                            </figure>
-                                            <div className="cardset-body">
-                                                <span className="cardset-name">Temhamol</span>
-                                                <h2 className="cardset-tit"> 템하몰 방문손잡이 (3color) </h2>
-                                                <p className="cardset-desc">32,000<small>원</small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <span className="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-                            </div>
-                            <div className="swiper-button-prev" tabindex="0" role="button" aria-label="Previous slide"
-                                 aria-controls="swiper-wrapper-a2c1438ecb8fa257"></div>
-                            <div className="swiper-button-next" tabindex="0" role="button" aria-label="Next slide"
-                                 aria-controls="swiper-wrapper-a2c1438ecb8fa257"></div>
-                            <div
-                                className="swiper-pagination swiper-pagination-progressbar swiper-pagination-horizontal">
-                                <span className="swiper-pagination-progressbar-fill" style={{
-                                    transform: "translate3d(0px, 0px, 0px) scaleX(0.25) scaleY(1)",
-                                    transitionDuration: "300ms"
-                                }}></span></div>
-                        </div>
-                    </div>
-                </div>*/}
             </main>
 
             <div className="basic-N9" data-bid="xMLUAv9Nod" id="">
@@ -368,17 +148,16 @@ function Home(){
                     <div className="contents-container">
                         <div className="contents-bottom container-md">
                             <div className="textset">
-                                <h2 className="textset-tit">Notice &amp; News</h2>
+                                <h2 className="textset-tit">실시간 인기글</h2>
                                 <p className="textset-desc">
-                                    웹사이트는 비즈니스의 온라인 존재감을 나타내는 중요한 수단이며, 비즈니스가 웹사이트를 보유하면 전 세계 어디에서든 제품과 서비스에 대한 정보를 제공할
-                                    수 있습니다. 이를 통해 새로운 고객을 유치하고, 기존 고객과의 관계를 유지할 수 있습니다.
+                                    시계에 관한 흥미로운 이야기와 유용한 정보를 담은 인기글을 확인하세요. 최신 트렌드와 팁을 통해 현명한 쇼핑을 도와드립니다!
                                 </p>
                             </div>
                             <div className="contents-cardset">
                                 <div className="cardset-wrap">
-                                    {data.bList &&
-                                        data.bList.map((board) =>
-                                            <Link to={"/board/detail/" + board.no}
+                                    {data.topBoardList &&
+                                        data.topBoardList.map((board) =>
+                                            <Link to={"/boards/" + board.no}
                                                   className="cardset cardset-inner cardset-hover cardset-border"
                                                   key={board.no}>
                                                 <div className="cardset-cont">
@@ -386,14 +165,14 @@ function Home(){
                                                     <p className="cardset-desc">
                                                         {board.content}
                                                     </p>
-                                                    <span className="cardset-txt">{board.regdate}</span>
+                                                    <span className="cardset-txt">{board.createAt}</span>
                                                 </div>
                                             </Link>
                                         )}
                                 </div>
                             </div>
                             <div className="contents-btn">
-                                <a href="javascript:void(0);" className="btnset btnset-icon icon-left icon-more">더보기</a>
+                                <a href="/boards" className="btnset btnset-icon icon-left icon-more">더보기</a>
                             </div>
                         </div>
                     </div>

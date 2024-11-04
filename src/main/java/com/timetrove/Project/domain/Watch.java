@@ -2,63 +2,71 @@ package com.timetrove.Project.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
-@Setter
-@Table(name = "watch", indexes = {
-	    @Index(name = "idx_name", columnList = "name"),
-	    @Index(name = "idx_model", columnList = "model")
-	})
+@Entity
+@NoArgsConstructor
+@Table(indexes = { // 상품 검색을 위한 인덱스 생성
+        @Index(name = "idx_watch_name", columnList = "name"),
+        @Index(name = "idx_watch_model", columnList = "model"),
+        @Index(name = "idx_watch_view_count", columnList = "view_count"),
+        @Index(name = "idx_watch_sold_price", columnList = "sold_price")
+})
 public class Watch {
 	
 	@Id
-	private Long no;
-	
-	@Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "watch_id")
+	private Long id;
+
+    @Column(unique = true)
 	private String name;
 	
 	private String image;
-	private int c_price;
-	private int s_price;
+
+    @Column(name = "consumer_price")
+	private int consumerPrice;
+    @Column(name = "sold_price")
+	private Long soldPrice;
+
+    private Long quantity;
 	private String points;
 	private String discount;
 	
 	@Column(unique = true)
 	private String model;
-	
-	private int hit;
-	
-	@Column(name = "dimages")
+
+    @Column(name = "detail_image")
     private String dimagesString;
 
-    @Transient
-    private String[] dimagesArray;
+    @Column(name = "view_count")
+    private int viewCount;
 
-    public void setDimages(String[] dimages) {
-        this.dimagesArray = dimages;
-        this.dimagesString = dimages.length > 1 ? String.join("|", dimages) : dimages[0];
-    }
+    @Column(name = "cart_count")
+    private int cartCount;
 
-    public String[] getDimages() {
-        if (dimagesArray == null) {
-            dimagesArray = dimagesString.contains("|") ? dimagesString.split("\\|") : new String[]{dimagesString};
+    @Column(name = "purchase_count")
+    private int purchaseCount;
+
+
+    public void decreaseQuantity(Long quantity) {
+        if (this.quantity < quantity) {
+            throw new RuntimeException("재고가 부족합니다.");
         }
-        return dimagesArray;
-    }
-    
-    // JPA가 데이터 저장 및 수정할 떄 자동실행
-    @PrePersist
-    @PreUpdate
-    private void prePersist() {
-        if (dimagesArray != null) {
-            dimagesString = dimagesArray.length > 1 ? String.join("|", dimagesArray) : dimagesArray[0];
-        }
+        this.quantity -= quantity;
     }
 
-    @PostLoad
-    private void postLoad() {
-        dimagesArray = dimagesString.contains("|") ? dimagesString.split("\\|") : new String[]{dimagesString};
+    public void increaseViewCount() {
+        this.viewCount++;
     }
+
+    public void increaseCartCount() {
+        this.cartCount++;
+    }
+
+    public void increasePurchaseCount() {
+        this.purchaseCount++;
+    }
+
 }

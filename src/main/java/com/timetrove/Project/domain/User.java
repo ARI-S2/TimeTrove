@@ -41,4 +41,5 @@ public class User {
         this.kakaoNickname = kakaoNickname;
         this.userRole = userRole;
     }
+
 }

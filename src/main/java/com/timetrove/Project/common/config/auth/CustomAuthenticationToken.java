@@ -7,16 +7,18 @@ import java.util.Collection;
 
 public class CustomAuthenticationToken extends AbstractAuthenticationToken {
     private final Long userCode;
+    private final String token;
 
-    public CustomAuthenticationToken(Long userCode, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public CustomAuthenticationToken(Long userCode, String token, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.userCode = userCode;
-        super.setAuthenticated(true); // must use super, as we override
+        this.token = token;
+        super.setAuthenticated(true);
     }
 
     @Override
     public Object getCredentials() {
-        return null;
+        return token;
     }
 
     @Override

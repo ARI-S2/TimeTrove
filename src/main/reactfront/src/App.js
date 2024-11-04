@@ -19,13 +19,13 @@ function App() {
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route
-                path="/login/oauth2/callback/kakao" //redirect_url
-                element={<LoginHandeler/>} //당신이 redirect_url에 맞춰 꾸밀 컴포넌트
+                path="/login/oauth2/callback/kakao" //카카오 소셜 로그인 redirect url
+                element={<LoginHandeler/>}
             />
-            <Route path="/board/list" element={<BoardList/>}/>
-            <Route path="/board/detail/:no" element={<BoardDetail/>}/>
-            <Route path="/watch/list" element={<WatchList/>}/>
-            <Route path="/watch/detail/:no" element={<WatchDetail/>}/>
+            <Route path="/boards" element={<BoardList/>}/>
+            <Route path="/boards/:no" element={<BoardDetail/>}/>
+            <Route path="/watches" element={<WatchList/>}/>
+            <Route path="/watches/:id" element={<WatchDetail/>}/>
             <Route path="/mypage" element={<MyPage/>}/>
           </Routes>
           <Footer/>

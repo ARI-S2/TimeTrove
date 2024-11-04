@@ -278,7 +278,7 @@ br.br-mo { display: none; }
 
 /* ========== */
 /* Layout */
-.container-lg { max-width: 1920px; margin: 0 auto; } 
+/*.container-lg { max-width: 1920px; margin: 0 auto; } */
 .container-md { max-width: 1280px; margin: 0 auto; } 
 .container-sm { max-width: 1024px; margin: 0 auto; } 
 

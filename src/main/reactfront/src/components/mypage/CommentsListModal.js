@@ -7,7 +7,7 @@ function CommentsHistoryModal({ closeModal }) {
     const queryClient = useQueryClient();
 
     const { data: commentHistory, error, isLoading } = useQuery('commentHistory', async () => {
-        const response = await apiClient.get('/mypage/comments');
+        const response = await apiClient.get('/comment/comment_history');
         console.log(response.data);
         return response.data;
     });
@@ -46,23 +46,29 @@ function CommentsHistoryModal({ closeModal }) {
 
     return (
         <div className="comments-history-modal">
-            <button className="btn-close" onClick={closeModal}>닫기</button>
-            <h2 className="contents-tit" style={{ marginBottom: '20px' }}>내 TimeTrove 댓글</h2>
+            <div className="contents-right-group remove-btn">
+                <img
+                    src={process.env.PUBLIC_URL + "/icons/close.png"}
+                    alt="닫기 아이콘"
+                    onClick={closeModal}
+                />
+            </div>
+            <h2 className="contents-tit" style={{marginBottom: '20px'}}>내 TimeTrove 댓글</h2>
             {Object.keys(groupedComments).map(date => (
                 <div key={date} className="comments-group">
                     <h3>{date}</h3>
-                    <hr />
+                    <hr/>
                     {groupedComments[date].map(comment => (
-                        <div key={comment.id} className="comment" style={{ position: 'relative' }}>
+                        <div key={comment.id} className="comment" style={{position: 'relative'}}>
                             <button className="delete-btn"
-                                onClick={() => handleDeleteComment(comment.id)}
+                                    onClick={() => handleDeleteComment(comment.id)}
                             >
                                 x
                             </button>
                             <p className="badgeset badgeset-fill badgeset-border badgeset-round">{format(parseISO(comment.createdAt), 'HH : mm : ss')}</p>
                             <p className="comment-content">{comment.content}</p>
                             <p>
-                                <a href={`/board/detail/${comment.no}`} target="_blank" rel="noopener noreferrer">
+                                <a href={`/boards/${comment.no}`} target="_blank" rel="noopener noreferrer">
                                     {comment.subject}
                                 </a>에 남긴 댓글
                             </p>

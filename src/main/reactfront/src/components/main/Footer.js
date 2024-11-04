@@ -51,11 +51,11 @@ function Footer() {
         <footer className="basic-N4" data-bid="UnlUaV0TmD">
             <div className="footer-container container-lg">
                 <div className="footer-top">
-                    <h1 className="footer-logo">
-                        <a href="/">
-                            <img src={process.env.PUBLIC_URL + "/images/img_logo_lightgray.png"} alt="로고" />
+                    <h2 className="footer-logo">
+                        <a href="/" style={{ color: "whitesmoke" }}>
+                            TimeTrove
                         </a>
-                    </h1>
+                    </h2>
                     <ul className="footer-menulist">
                         <li className="footer-menuitem">
                             <a href="/terms">

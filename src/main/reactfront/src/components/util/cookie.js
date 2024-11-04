@@ -3,7 +3,7 @@ import { Cookies } from 'react-cookie';
 const cookies = new Cookies();
 
 export const setCookie = (name, value, options = {}) => {
-    const defaultOptions = { path: '/', maxAge: 7 * 24 * 60 * 60 };
+    const defaultOptions = { path: '/', maxAge: 10 * 24 * 60 * 60 };
     const mergedOptions = { ...defaultOptions, ...options };
     cookies.set(name, value, mergedOptions);
 };
@@ -25,6 +25,4 @@ export const eraseCookie = (name, options = {}) => {
 export const logout = () => {
     eraseCookie('jwtToken');
     eraseCookie('id');
-    eraseCookie('nickname');
-    eraseCookie('profile');
 };

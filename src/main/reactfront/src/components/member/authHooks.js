@@ -4,9 +4,9 @@ import { getCookie, setCookie } from '../util/cookie';
 
 const fetchKakaoLogin = async (code) => {
     const response = await apiClient.get(`/login/oauth2/callback/kakao?code=${code}`);
-    const token = response.data;
-    setCookie('jwtToken', token);
-    return token;
+    const tokens = response.data;
+    setCookie('jwtToken', tokens);
+    return tokens;
 };
 
 export const fetchUser = async () => {

@@ -16,10 +16,13 @@ import java.util.List;
 @Builder
 public class CommentDto {
     private Long id;
+
     @NonNull
     private Long no;
+
     @NonNull
     private String content;
+
     @NonNull
     private Long userCode;
     
@@ -27,8 +30,10 @@ public class CommentDto {
     private String profileImg;
     private Long parentId;
     private String subject;
+
     @Builder.Default
     private List<CommentDto> children = new ArrayList<>();
+
     private String createdAt;
 
     public static CommentDto convertCommentToDto(Comment comment) {

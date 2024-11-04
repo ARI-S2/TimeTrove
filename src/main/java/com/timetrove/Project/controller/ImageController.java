@@ -1,7 +1,8 @@
 package com.timetrove.Project.controller;
 
-import com.timetrove.Project.service.MypageService;
-import org.springframework.http.HttpHeaders;
+import com.timetrove.Project.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +17,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ImageController {
 	
-	private final MypageService mypageService;
+	private final UserService userService;
 
-    // 사진이 저장된 경로에서 사진을 바이너리 데이터로 변환 휴 리턴
+    /**
+     * @param userCode 사용자 코드
+     * @return 사용자 프로필 이미지
+     */
+    @Operation(summary = "사용자 프로필 이미지 조회", description = "사진이 저장된 경로에서 사진을 바이너리 데이터로 변환 후 리턴합니다.")
     @GetMapping("/user/{userCode}/profile-image")
-    public ResponseEntity<byte[]> getUserProfileImage(@PathVariable("userCode") Long userCode) {
-        try {
-            byte[] image = mypageService.getUserProfileImage(userCode);
+    public ResponseEntity<byte[]> getUserProfileImage(@PathVariable("userCode") Long userCode) throws IOException {
+            byte[] imageData = userService.getUserProfileImage(userCode);
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                    .body(image);
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body(null);
-        }
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imageData);
     }
 }
