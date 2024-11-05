@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  timetrove-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: timetrove-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - timetrove-network
+    restart: always
+
+  timetrove-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: timetrove-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - timetrove-network
+    depends_on:
+      - timetrove-backend
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    networks:
+      - timetrove-network
+    restart: always
+    volumes:
+      - ./conf/:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    depends_on:
+      - timetrove-backend
+      - timetrove-frontend
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - ./backend/db/conf.d:/etc/mysql/conf.d
+      - ./backend/db/data:/var/lib/mysql
+      - ./backend/db/initdb.d:/docker-entrypoint-initdb.d
+    env_file: ./backend/.env
+    ports:
+        - "3306:3306"
+    networks:
+      - timetrove-network
+    restart: always
+
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+    networks:
+      - timetrove-network
+    restart: always
+
+networks:
+  timetrove-network:
+    driver: bridge
