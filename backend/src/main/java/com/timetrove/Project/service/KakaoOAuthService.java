@@ -23,7 +23,9 @@ public class KakaoOAuthService {
     @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
     private String clientSecret;
 
-    private static final String KAKAO_REDIRECT_URI = "http://localhost:3000/login/oauth2/callback/kakao";
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String kakaoRedirectUri;
+
     private static final String KAKAO_TOKEN_URI = "https://kauth.kakao.com/oauth/token";
     private static final String KAKAO_USER_INFO_URI = "https://kapi.kakao.com/v2/user/me";
 
@@ -39,7 +41,7 @@ public class KakaoOAuthService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", clientId);
-        params.add("redirect_uri", KAKAO_REDIRECT_URI);
+        params.add("redirect_uri", kakaoRedirectUri);
         params.add("code", code);
         params.add("client_secret", clientSecret);
 

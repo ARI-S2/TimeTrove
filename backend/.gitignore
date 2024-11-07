@@ -39,4 +39,3 @@ out/
 # Custom entry to exclude
 .env
 src/main/generated/
-src/main/java/com/timetrove/Project/common/config/auth/JwtProperties.java
