@@ -1,0 +1,12 @@
+target/
+build/
+*.iml
+.idea/
+.project
+.classpath
+.DS_Store
+.git
+.gitignore
+.env
+logs/
+*.log
