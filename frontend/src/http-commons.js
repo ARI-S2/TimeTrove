@@ -4,7 +4,7 @@ import {KAKAO_AUTH_URL} from "./components/member/OAuth";
 
 // axios 인스턴스 생성
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_EC2_HOST_URL,
+    baseURL: `http://${process.env.REACT_APP_EC2_HOST_URL}`,
     headers: {
         "Content-Type": "application/json;charset=utf-8",
         "Access-Control-Allow-Origin": "*"
@@ -43,7 +43,7 @@ instance.interceptors.response.use(
                 const tokens = getCookie('jwtToken');
 
                 try {
-                    const response = await axios.post(process.env.REACT_APP_EC2_HOST_URL,+'/reissue', null, {
+                    const response = await axios.post(`http://${process.env.REACT_APP_EC2_HOST_URL}/reissue`, null, {
                         headers: {
                             'Authorization': `${tokens.refreshToken}`,
                         },
