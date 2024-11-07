@@ -7,13 +7,13 @@ services:
       dockerfile: Dockerfile
     container_name: timetrove-backend
     environment:
-      SPRING_DATASOURCE_URL: ${{ secrets.MYSQL_URL }}
-      SPRING_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-      SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true
+      MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
       KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
       EC2_DOMAIN: ${{ secrets.EC2_DOMAIN }}
@@ -51,25 +51,6 @@ services:
     depends_on:
       - timetrove-backend
       - timetrove-frontend
-
-  mysql:
-    image: mysql:8.0
-    volumes:
-      - ./backend/db/conf.d:/etc/mysql/conf.d
-      - ./backend/db/data:/var/lib/mysql
-      - ./backend/db/initdb.d:/docker-entrypoint-initdb.d
-    environment:
-      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-      MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
-      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-      MYSQL_USER: ${{ secrets.MYSQL_USER }}
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-    ports:
-      - "3306:3306"
-    networks:
-      - timetrove-network
-    restart: always
 
   redis:
     image: redis:7.0
