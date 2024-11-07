@@ -13,7 +13,7 @@ spring:
         user_sql_comments: true
         ddl-auto: validate
   profiles:
-    active: dev
+    active: prod
 
 logging:
   level:

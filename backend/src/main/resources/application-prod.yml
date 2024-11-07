@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_DEV_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?autoReconnection=true
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: ${REDIS_DEV_HOST}
+      host: ${REDIS_HOST}
       port: ${REDIS_PORT}
   security:
     oauth2:
