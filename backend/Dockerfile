@@ -1,23 +1,32 @@
 # 빌드 단계: Builder Stage
-FROM openjdk:17.0-slim AS builder
+FROM openjdk:17-jdk-slim as build
+
 WORKDIR /app
 
-# 소스 복사 및 빌드 실행
-COPY . .
+# Gradle Wrapper와 빌드 파일 복사
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+# Gradle Wrapper에 실행 권한 부여
+RUN chmod +x ./gradlew
+
+# 소스 복사
+COPY src src
+
+# 빌드 실행
 RUN ./gradlew build --no-daemon
 
 # 실행 단계: Production Image
-FROM openjdk:17.0-slim
+FROM openjdk:17-jdk-slim
+
 WORKDIR /app
 
-# 시간대 설정
-ENV TZ=Asia/Seoul
+# 빌드 단계에서 생성된 JAR 파일 복사
+COPY --from=build /app/build/libs/*.jar app.jar
 
-# 빌드된 JAR 파일 복사 (환경 변수로 설정)
-ARG JAR_FILE=build/libs/*.jar
-COPY --from=builder /app/${JAR_FILE} app.jar
-
-# JAR 파일 실행
+# 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # FROM : Docker Base Image (기반이 되는 이미지, <이미지 이름>:<태그> 형식으로 설정), # openjdk 17 버전을 사용

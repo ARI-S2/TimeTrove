@@ -10,3 +10,6 @@ build/
 .env
 logs/
 *.log
+.gradle
+build
+!build/libs/*.jar
