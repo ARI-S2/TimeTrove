@@ -43,7 +43,7 @@ instance.interceptors.response.use(
                 const tokens = getCookie('jwtToken');
 
                 try {
-                    const response = await axios.post(process.env.EC2_HOST_URL+'/reissue', null, {
+                    const response = await axios.post(process.env.REACT_APP_EC2_HOST_URL,+'/reissue', null, {
                         headers: {
                             'Authorization': `${tokens.refreshToken}`,
                         },
