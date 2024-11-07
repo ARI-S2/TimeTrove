@@ -1,5 +1,4 @@
 target/
-build/
 *.iml
 .idea/
 .project
@@ -11,5 +10,10 @@ build/
 logs/
 *.log
 .gradle
-build
-!build/libs/*.jar
+build/*
+!build/libs/
+
+!gradlew
+!gradle/
+!build.gradle
+!settings.gradle

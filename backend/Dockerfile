@@ -4,16 +4,16 @@ FROM openjdk:17-jdk-slim as build
 WORKDIR /app
 
 # Gradle Wrapper와 빌드 파일 복사
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
 COPY settings.gradle .
+COPY backend/gradlew backend/
+COPY backend/gradle backend/gradle
+COPY backend/build.gradle backend/
+COPY backend/src backend/src
+
+WORKDIR /app/backend
 
 # Gradle Wrapper에 실행 권한 부여
 RUN chmod +x ./gradlew
-
-# 소스 복사
-COPY src src
 
 # 빌드 실행
 RUN ./gradlew build --no-daemon
