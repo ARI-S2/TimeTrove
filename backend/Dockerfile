@@ -16,7 +16,7 @@ WORKDIR /app/backend
 RUN chmod +x ./gradlew
 
 # 빌드 실행
-RUN ./gradlew build --no-daemon
+RUN ./gradlew build --no-daemon --warning-mode all --stacktrace
 
 # 실행 단계: Production Image
 FROM openjdk:17-jdk-slim
@@ -24,7 +24,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # 빌드 단계에서 생성된 JAR 파일 복사
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/backend/build/libs/*.jar app.jar
 
 # 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "app.jar"]
