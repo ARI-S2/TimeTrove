@@ -16,7 +16,7 @@ services:
       REDIS_PORT: 6379
       KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
       KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-      EC2_DOMAIN: ${{ secrets.EC2_DOMAIN }}
+      EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
     ports:
       - "8080:8080"
     depends_on:
