@@ -3,28 +3,8 @@ FROM openjdk:17-jdk-slim as build
 
 WORKDIR /app
 
-# Gradle Wrapper와 빌드 파일 복사
-COPY settings.gradle .
-COPY backend/gradlew backend/
-COPY backend/gradle backend/gradle
-COPY backend/build.gradle backend/
-COPY backend/src backend/src
-
-WORKDIR /app/backend
-
-# Gradle Wrapper에 실행 권한 부여
-RUN chmod +x ./gradlew
-
-# 빌드 실행
-RUN ./gradlew build --no-daemon --warning-mode all --stacktrace
-
-# 실행 단계: Production Image
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
 # 빌드 단계에서 생성된 JAR 파일 복사
-COPY --from=build /app/backend/build/libs/*.jar app.jar
+COPY build/libs/*.jar app.jar
 
 # 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "app.jar"]

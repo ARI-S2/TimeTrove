@@ -2,34 +2,30 @@ version: '3.8'
 
 services:
   timetrove-backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ${DOCKER_HUB_USERNAME}/timetrove-be:latest  # Docker Hub에서 백엔드 이미지 가져오기
     container_name: timetrove-backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true
-      MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      # 백엔드 서비스의 환경 변수 설정
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true
+      MYSQL_USERNAME: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-      KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-      EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      EC2_IP_ADDRESS: ${EC2_IP_ADDRESS}
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
       - redis
     networks:
       - timetrove-network
     restart: always
 
   timetrove-frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ${DOCKER_HUB_USERNAME}/timetrove-fe:latest  # Docker Hub에서 프론트엔드 이미지 가져오기
     container_name: timetrove-frontend
     ports:
       - "3000:3000"
@@ -45,7 +41,7 @@ services:
       - timetrove-network
     restart: always
     volumes:
-      - ./conf/:/etc/nginx/conf.d
+      - ./conf/:/etc/nginx/conf.d  # Nginx 설정 파일 마운트
     ports:
       - "80:80"
     depends_on:
@@ -62,4 +58,4 @@ services:
 
 networks:
   timetrove-network:
-    driver: bridge
+    external: true  # 외부에서 생성된 네트워크 사용
