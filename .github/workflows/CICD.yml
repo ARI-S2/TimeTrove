@@ -25,10 +25,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set env in docker-compose.yml
+      - name: Set env in docker-compose.yaml
         uses: microsoft/variable-substitution@v1
         with:
-          files: './docker-compose.yml'
+          files: './docker-compose.yaml'
         env:
           MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
