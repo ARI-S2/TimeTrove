@@ -30,12 +30,15 @@ jobs:
         with:
           files: './docker-compose.yaml'
         env:
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-          EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+          services.timetrove-backend.environment.SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true
+          services.timetrove-backend.environment.MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          services.timetrove-backend.environment.MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          services.timetrove-backend.environment.KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          services.timetrove-backend.environment.KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          services.timetrove-backend.environment.EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+
+      - name: Debug - Print docker-compose.yaml after substitution
+        run: cat docker-compose.yaml
 
       # gradlew 파일에 실행 권한 부여
       - name: Grant execute permission for gradlew
@@ -102,7 +105,7 @@ jobs:
         # 새 컨테이너 시작
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/  
+          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yaml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/  
           ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_IP_ADDRESS} '
             sudo docker network create timetrove-network || true  
             sudo docker pull ${{ env.DOCKER_HUB_USERNAME }}/timetrove-be:latest
