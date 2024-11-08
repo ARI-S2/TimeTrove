@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   timetrove-backend:
-    image: ${DOCKER_HUB_USERNAME}/timetrove-be:latest  # Docker Hub에서 백엔드 이미지 가져오기
+    image: devyeonsu/timetrove-be:latest  # Docker Hub에서 백엔드 이미지 가져오기
     container_name: timetrove-backend
     environment:
       # 백엔드 서비스의 환경 변수 설정
@@ -25,7 +25,7 @@ services:
     restart: always
 
   timetrove-frontend:
-    image: ${DOCKER_HUB_USERNAME}/timetrove-fe:latest  # Docker Hub에서 프론트엔드 이미지 가져오기
+    image: devyeonsu/timetrove-fe:latest  # Docker Hub에서 프론트엔드 이미지 가져오기
     container_name: timetrove-frontend
     ports:
       - "3000:3000"
