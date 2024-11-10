@@ -25,29 +25,29 @@ services:
     restart: always
 
   timetrove-frontend:
-    image: devyeonsu/timetrove-fe:latest  # Docker Hub에서 프론트엔드 이미지 가져오기
+    image: devyeonsu/timetrove-fe:latest
     container_name: timetrove-frontend
-    ports:
-      - "3000:80"  # 변경: 호스트의 3000 포트를 컨테이너의 80 포트로 매핑
+    volumes:
+      - ./frontend/build:/usr/share/nginx/html
     networks:
       - timetrove-network
     depends_on:
       - timetrove-backend
-    restart: always
 
   nginx:
     image: nginx:latest
-    networks:
-      - timetrove-network
-    restart: always
+    container_name: nginx-proxy
     volumes:
-      - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf  # Nginx 설정 파일 마운트
-      - ./frontend/default.conf:/etc/nginx/conf.d/frontend.conf  # frontend의 default.conf 파일 마운트
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
     ports:
       - "80:80"
     depends_on:
       - timetrove-backend
       - timetrove-frontend
+    networks:
+      - timetrove-network
+    restart: always
 
   redis:
     image: redis:7.0
