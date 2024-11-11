@@ -25,17 +25,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set env in docker-compose.yaml
+      - name: Set env in application-prod.yml
         uses: microsoft/variable-substitution@v1
         with:
-          files: './docker-compose.yaml'
+          files: './backend/src/main/resources/application-prod.yml'
         env:
-          services.timetrove-backend.environment.SPRING_DATASOURCE_URL: jdbc:mysql://${{ secrets.MYSQL_HOST_IP }}:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-          services.timetrove-backend.environment.SPRING_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          services.timetrove-backend.environment.SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          services.timetrove-backend.environment.KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-          services.timetrove-backend.environment.KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-          services.timetrove-backend.environment.EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+          spring.datasource.url: jdbc:mysql://${{ secrets.MYSQL_HOST_IP }}:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          spring.datasource.username: ${{ secrets.MYSQL_USERNAME }}
+          spring.datasource.password: ${{ secrets.MYSQL_PASSWORD }}
+          spring.security.oauth2.client.registration.kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+          spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          spring.security.oauth2.client.registration.kakao.redirect-uri: http://${{ secrets.EC2_IP_ADDRESS }}/api/login/oauth2/callback/kakao
 
       - name: Debug - Print docker-compose.yaml after substitution
         run: cat docker-compose.yaml
