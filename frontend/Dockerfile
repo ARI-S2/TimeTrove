@@ -2,15 +2,12 @@
 FROM node:20.16.0-alpine AS build
 WORKDIR /app
 
-# 의존성 설치 및 빌드(CI)
+# 의존성 설치
 COPY package.json .
 RUN npm install
 
-# 빌드 시 환경 변수 설정
+# 소스 코드 복사 및 빌드
 COPY . .
-ARG REACT_APP_EC2_HOST_URL
-ENV REACT_APP_EC2_HOST_URL=$REACT_APP_EC2_HOST_URL
-
 RUN npm run build
 
 # Nginx를 기반으로 하는 최종 이미지

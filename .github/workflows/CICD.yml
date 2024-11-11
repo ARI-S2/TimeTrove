@@ -61,10 +61,13 @@ jobs:
         with:
           node-version: '20'
 
+      # 프론트엔드 .env 파일 생성
+      - name: Create .env file
+        run: |
+          echo REACT_APP_EC2_HOST_URI=${{ secrets.EC2_IP_ADDRESS }} >> frontend/.env
+
       # 프론트엔드 빌드
       - name: Build Frontend
-        env:
-          REACT_APP_EC2_HOST_URL: ${{ env.EC2_IP_ADDRESS }}
         # 클린 인스톨
         run: |
           cd frontend
