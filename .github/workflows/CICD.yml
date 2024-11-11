@@ -105,7 +105,8 @@ jobs:
         # 새 컨테이너 시작
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yaml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/  
+          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yaml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/ 
+          scp -r -o StrictHostKeyChecking=no -i private_key conf ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/
           ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_IP_ADDRESS} '
             sudo docker network create timetrove-network || true  
             sudo docker pull ${{ env.DOCKER_HUB_USERNAME }}/timetrove-be:latest
