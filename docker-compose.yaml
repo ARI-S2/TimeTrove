@@ -5,14 +5,14 @@ services:
     image: devyeonsu/timetrove-be:latest  # Docker Hub에서 백엔드 이미지 가져오기
     container_name: timetrove-backend
     environment:
-      # 백엔드 서비스의 환경 변수 설정
+      # 백엔드 환경 변수 설정
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      MYSQL_USERNAME: ${MYSQL_USERNAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
       KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
       KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
       EC2_IP_ADDRESS: ${EC2_IP_ADDRESS}

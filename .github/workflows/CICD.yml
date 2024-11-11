@@ -30,9 +30,9 @@ jobs:
         with:
           files: './docker-compose.yaml'
         env:
-          services.timetrove-backend.environment.SPRING_DATASOURCE_URL: jdbc:mysql://${{ secrets.MYSQL_HOST_IP }}:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true
-          services.timetrove-backend.environment.MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          services.timetrove-backend.environment.MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          services.timetrove-backend.environment.SPRING_DATASOURCE_URL: jdbc:mysql://${{ secrets.MYSQL_HOST_IP }}:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          services.timetrove-backend.environment.SPRING_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          services.timetrove-backend.environment.SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           services.timetrove-backend.environment.KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
           services.timetrove-backend.environment.KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
           services.timetrove-backend.environment.EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
