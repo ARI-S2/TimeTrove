@@ -1,5 +1,8 @@
 spring:
   datasource:
+    hikari:
+      connection-timeout: 90000 # 90초
+      maximum-pool-size: 10
     url: jdbc:mysql://172.30.1.89:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: timetrove
     password: root
@@ -37,3 +40,7 @@ spring:
   web:
     resources:
       static-locations: file:/app/uploads/
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
