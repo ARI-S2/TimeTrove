@@ -22,7 +22,7 @@ public class AuthController {
      * @return 토큰 객체
      */
     @Operation(summary = "카카오 로그인", description = "카카오 OAuth2 인증을 수행하고, 인증된 사용자의 액세스&리프레시 토큰을 반환합니다.")
-    @GetMapping("/login/oauth2/callback/kakao")
+    @GetMapping("/api/login/oauth2/callback/kakao")
     public ResponseEntity<TokenDto> kakaoLogin(@RequestParam("code") String code) {
         TokenDto tokens = authService.authenticateUser(code);
         return createTokenResponse(tokens);
@@ -33,7 +33,7 @@ public class AuthController {
      * @return 성공적으로 로그아웃되면 응답 내용이 없는 상태로 반환
      */
     @Operation(summary = "로그아웃", description = "사용자가 보유한 리프레시 토큰을 무효화하여 로그아웃 처리합니다.")
-    @PostMapping("/logout")
+    @PostMapping("/api/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String refreshToken) {
         authService.logout(refreshToken);
         return ResponseEntity.noContent().build();
@@ -44,7 +44,7 @@ public class AuthController {
      * @return 새로운 토큰 객체
      */
     @Operation(summary = "토큰 재발급", description = "리프레시 토큰을 검증하고, 유효하다면 새로운 액세스&리프레시 토큰을 발급합니다.")
-    @PostMapping("/reissue")
+    @PostMapping("/api/reissue")
     public ResponseEntity<TokenDto> reissueTokens(@RequestHeader("Authorization") String refreshToken) {
         TokenDto tokens = authService.reissueTokens(refreshToken);
         return createTokenResponse(tokens);

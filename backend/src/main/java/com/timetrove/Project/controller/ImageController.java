@@ -24,7 +24,7 @@ public class ImageController {
      * @return 사용자 프로필 이미지
      */
     @Operation(summary = "사용자 프로필 이미지 조회", description = "사진이 저장된 경로에서 사진을 바이너리 데이터로 변환 후 리턴합니다.")
-    @GetMapping("/user/{userCode}/profile-image")
+    @GetMapping("/api/user/{userCode}/profile-image")
     public ResponseEntity<byte[]> getUserProfileImage(@PathVariable("userCode") Long userCode) throws IOException {
             byte[] imageData = userService.getUserProfileImage(userCode);
             return ResponseEntity.ok()

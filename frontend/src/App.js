@@ -19,7 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route
-                path="/login/oauth2/callback/kakao" //카카오 소셜 로그인 redirect url
+                path="/api/login/oauth2/callback/kakao" //카카오 소셜 로그인 redirect url
                 element={<LoginHandeler/>}
             />
             <Route path="/boards" element={<BoardList/>}/>

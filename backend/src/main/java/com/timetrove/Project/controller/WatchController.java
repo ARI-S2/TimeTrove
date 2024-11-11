@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/watches")
+@RequestMapping("/api/watches")
 @RequiredArgsConstructor
 public class WatchController {
 

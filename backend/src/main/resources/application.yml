@@ -12,9 +12,6 @@ spring:
         format_sql: true
         user_sql_comments: true
         ddl-auto: validate
-  mvc:
-    servlet:
-      path: /api
   profiles:
     active: prod
 
