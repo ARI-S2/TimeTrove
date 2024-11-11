@@ -4,6 +4,5 @@ dist/
 .DS_Store
 .git
 .gitignore
-.env
 logs/
 *.log

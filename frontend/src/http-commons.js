@@ -3,8 +3,9 @@ import {getCookie, logout, setCookie} from "./components/util/cookie";
 import {KAKAO_AUTH_URL} from "./components/member/OAuth";
 
 const getBaseUrl = () => {
-    if (process.env.REACT_APP_EC2_HOST_URI) {
-        return `http://${process.env.REACT_APP_EC2_HOST_URI}/api`;
+    const hostUri = process.env.REACT_APP_EC2_HOST_URI;
+    if (hostUri) {
+        return `http://${hostUri}/api`;
     }
     return 'http://localhost/api';  // 개발 환경
 };
@@ -12,7 +13,6 @@ const getBaseUrl = () => {
 // axios 인스턴스 생성
 const instance = axios.create({
     baseURL: getBaseUrl(),
-    //baseURL: `http://localhost/api`,
     headers: {
         "Content-Type": "application/json;charset=utf-8",
         "Access-Control-Allow-Origin": "*"
