@@ -25,3 +25,18 @@ fi
 # Docker 서비스 시작
 sudo systemctl start docker
 sudo systemctl enable docker
+
+# MySQL 클라이언트 설치
+sudo apt-get update
+sudo apt-get install -y mysql-client
+
+# 원격 MySQL 서버 연결 테스트
+mysql -h "${MYSQL_HOST_IP}" -P 3306 -u timetrove -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" -e "SELECT 1;"
+
+# 연결 성공 시 메시지 출력
+if [ $? -eq 0 ]; then
+    echo "Successfully connected to remote MySQL server"
+else
+    echo "Failed to connect to remote MySQL server"
+    exit 1
+fi

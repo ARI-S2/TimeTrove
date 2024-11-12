@@ -25,15 +25,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          mysql database: 'mydb'
-          mysql user: 'timetrove'
-          mysql password: ${{ secrets.MYSQL_PASSWORD }}
-          character set server: 'utf8mb4'
+      # 원격 MySQL 서버 연결을 위한 직접 설치
+      - name: Install MySQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      # 원격 MySQL 서버 연결 테스트
+      - name: Test MySQL Connection
+        run: |
+          mysql \
+            -h ${{ secrets.MYSQL_HOST_IP }} \
+            -P 3306 \
+            -u timetrove \
+            -p${{ secrets.MYSQL_PASSWORD }} \
+            ${{ secrets.MYSQL_DATABASE }} \
+            -e "SELECT 1;"
 
       # gradlew 파일에 실행 권한 부여
       - name: Grant execute permission for gradlew
@@ -108,6 +115,9 @@ jobs:
           scp -o StrictHostKeyChecking=no -i private_key docker-compose.yaml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/
           scp -o StrictHostKeyChecking=no -i private_key deploy.sh ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/
           ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_IP_ADDRESS} '
+          export MYSQL_HOST_IP="${{ secrets.MYSQL_HOST_IP }}"
+          export MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}"
+          export MYSQL_DATABASE="${{ secrets.MYSQL_DATABASE }}"        
             chmod +x ./deploy.sh
             ./deploy.sh
             sudo docker network create timetrove-network || true  
