@@ -3,7 +3,7 @@ spring:
     hikari:
       connection-timeout: -1 # 무한
       maximum-pool-size: 10
-    url: jdbc:mysql://172.30.1.89:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://172.30.1.44:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: timetrove
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
