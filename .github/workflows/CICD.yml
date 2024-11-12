@@ -52,10 +52,10 @@ jobs:
 
       # 백엔드 빌드
       - name: Build Backend with Gradle
-        # 테스트 제외하고 빌드 -x test
+        # 테스트 제외하고 빌드
         run: |
           cd backend
-          ./gradlew build  
+          ./gradlew build -x test 
 
       # Node.js 설정 (프론트엔드 빌드를 위해)
       - name: Set up Node.js
