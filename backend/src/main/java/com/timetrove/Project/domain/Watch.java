@@ -7,12 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(indexes = { // 상품 검색을 위한 인덱스 생성
-        @Index(name = "idx_watch_name", columnList = "name"),
-        @Index(name = "idx_watch_model", columnList = "model"),
-        @Index(name = "idx_watch_view_count", columnList = "view_count"),
-        @Index(name = "idx_watch_sold_price", columnList = "sold_price")
-})
 public class Watch {
 	
 	@Id

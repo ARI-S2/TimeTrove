@@ -14,11 +14,6 @@ import lombok.Setter;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "comment", indexes = {
-	    @Index(name = "idx_user_code", columnList = "user_code"),
-	    @Index(name = "idx_no", columnList = "no"),
-	    @Index(name = "idx_parent_id", columnList = "parent_id")
-	})
 public class Comment {
 
     @Id

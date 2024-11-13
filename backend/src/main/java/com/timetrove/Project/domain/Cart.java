@@ -2,8 +2,6 @@ package com.timetrove.Project.domain;
 
 import java.time.LocalDateTime;
 
-import com.timetrove.Project.domain.User;
-import com.timetrove.Project.domain.Watch;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +11,6 @@ import jakarta.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "cart", indexes = {
-	    @Index(name = "idx_user_code", columnList = "user_code"),
-	    @Index(name = "idx_watch_no", columnList = "watch_no")
-	})
 public class Cart {
 
     @Id

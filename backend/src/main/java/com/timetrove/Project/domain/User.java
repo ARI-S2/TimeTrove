@@ -12,9 +12,6 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "user_timetrove", indexes = {
-	    @Index(name = "idx_kakao_nickname", columnList = "kakao_nickname")
-	})
 public class User {
     @Id
     @Column(name = "user_code")
