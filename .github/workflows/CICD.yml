@@ -66,9 +66,9 @@ jobs:
       # 프론트엔드 .env 파일 생성
       - name: Create .env file
         run: |
-          echo "REACT_APP_EC2_HOST_URI=${{ secrets.EC2_IP_ADDRESS }}" >> frontend/.env
+          echo "REACT_APP_EC2_HOST_URI=${{ secrets.EC2_PRIVATE_IP_ADDRESS }}" >> frontend/.env
         env:
-          REACT_APP_EC2_HOST_URI: ${{ secrets.EC2_IP_ADDRESS }}
+          REACT_APP_EC2_HOST_URI: ${{ secrets.EC2_PRIVATE_IP_ADDRESS }}
 
       # 프론트엔드 빌드
       - name: Build Frontend

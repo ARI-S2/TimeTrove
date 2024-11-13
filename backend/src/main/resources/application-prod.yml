@@ -24,7 +24,7 @@ spring:
           kakao:
             client-id: d008d7a526a3e250c2bd63146f16c578
             client-secret: PyZvv74qu9JZNVHO2chFnpB9uBrqJpj0
-            redirect-uri: http://ec2-43-200-102-150.ap-northeast-2.compute.amazonaws.com/api/login/oauth2/callback/kakao
+            redirect-uri: http://ec2-54-180-211-180.ap-northeast-2.compute.amazonaws.com/api/login/oauth2/callback/kakao
             scope:
               - profile_nickname
               - profile_image
