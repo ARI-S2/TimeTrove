@@ -1,7 +1,7 @@
 spring:
   datasource:
     hikari:
-      connection-timeout: -1 # 무한
+      connection-timeout: 30000 # 30초
       maximum-pool-size: 10
     url: jdbc:mysql://112.161.231.88:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: timetrove
