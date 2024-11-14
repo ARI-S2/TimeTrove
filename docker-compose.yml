@@ -4,8 +4,16 @@ services:
   timetrove-backend:
     image: devyeonsu/timetrove-be:latest
     container_name: timetrove-backend
+    # application.yml에서 사용할 환경 변수 설정
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${ SPRING_DATASOURCE_URL }
+      SPRING_DATASOURCE_USERNAME: ${ SPRING_DATASOURCE_USERNAME }
+      SPRING_DATASOURCE_PASSWORD: ${ SPRING_DATASOURCE_PASSWORD }
+      KAKAO_CLIENT_ID: ${ KAKAO_CLIENT_ID }
+      KAKAO_CLIENT_SECRET: ${ KAKAO_CLIENT_SECRET }
+      EC2_IP_ADDRESS: ${ EC2_IP_ADDRESS }
+      SERVER_PORT: 8080
     ports:
       - "8080:8080"
     depends_on:

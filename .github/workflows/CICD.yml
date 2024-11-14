@@ -42,6 +42,19 @@ jobs:
             ${{ secrets.MYSQL_DATABASE }} \
             -e "SELECT 1;"
 
+      # docker-compose.yml에 환경변수 설정
+      - name: Set env in docker-compose.yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: './docker-compose.yml'
+        env:
+          services.timetrove-backend.environment.SPRING_DATASOURCE_URL: jdbc:mysql://${{ secrets.MYSQL_HOST_IP }}:3306/${{ secrets.MYSQL_DATABASE }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          services.timetrove-backend.environment.SPRING_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          services.timetrove-backend.environment.SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          services.timetrove-backend.environment.KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          services.timetrove-backend.environment.KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          services.timetrove-backend.environment.EC2_IP_ADDRESS: ${{ secrets.EC2_IP_ADDRESS }}
+
       # gradlew 파일에 실행 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x backend/gradlew
@@ -113,7 +126,7 @@ jobs:
         # 새 컨테이너 시작
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yaml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/
+          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yml ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/
           scp -o StrictHostKeyChecking=no -i private_key deploy.sh ${EC2_USERNAME}@${EC2_IP_ADDRESS}:~/
           ssh -o StrictHostKeyChecking=no -i private_key ${EC2_USERNAME}@${EC2_IP_ADDRESS} '
           export MYSQL_HOST_IP="${{ secrets.MYSQL_HOST_IP }}"

@@ -3,9 +3,9 @@ spring:
     hikari:
       connection-timeout: 30000 # 30초
       maximum-pool-size: 10
-    url: jdbc:mysql://112.161.231.88:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: timetrove
-    password: root
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -22,9 +22,9 @@ spring:
       client:
         registration:
           kakao:
-            client-id: d008d7a526a3e250c2bd63146f16c578
-            client-secret: PyZvv74qu9JZNVHO2chFnpB9uBrqJpj0
-            redirect-uri: http://ec2-54-180-211-180.ap-northeast-2.compute.amazonaws.com/api/login/oauth2/callback/kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: http://${EC2_IP_ADDRESS}/api/login/oauth2/callback/kakao
             scope:
               - profile_nickname
               - profile_image
