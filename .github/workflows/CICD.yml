@@ -42,6 +42,22 @@ jobs:
             ${{ secrets.MYSQL_DATABASE }} \
             -e "SELECT 1;"
 
+      # Gradle 의존성 캐싱으로 빌드 시간 단축
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      # npm 패키지 캐싱으로 프론트엔드 빌드 시간 단축
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
       # docker-compose.yml에 환경변수 설정
       - name: Set env in docker-compose.yml
         uses: microsoft/variable-substitution@v1
@@ -63,13 +79,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # 백엔드 빌드
-      - name: Build Backend with Gradle
-        # 테스트 제외하고 빌드
-        run: |
-          cd backend
-          ./gradlew build -x test 
-
       # Node.js 설정 (프론트엔드 빌드를 위해)
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -84,13 +93,13 @@ jobs:
         env:
           REACT_APP_EC2_HOST_URI: ${{ secrets.EC2_IP_ADDRESS }}
 
-      # 프론트엔드 빌드
-      - name: Build Frontend
-        # 클린 인스톨
+      # 백엔드와 프론트엔드 빌드를 병렬로 실행하여 전체 빌드 시간 단축
+      - name: Build Backend and Frontend
         run: |
-          cd frontend
-          npm ci 
-          npm run build
+          chmod +x backend/gradlew
+          cd backend && ./gradlew build -x test --no-daemon &
+          cd frontend && npm install --prefer-offline && npm run build &
+          wait
 
       # Docker Hub 로그인
       - name: Login to Docker Hub
