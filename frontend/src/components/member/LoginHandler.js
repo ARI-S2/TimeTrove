@@ -26,11 +26,10 @@ const LoginHandler = (props) => {
     useEffect(() => {
         if (userData) {
             setCookie("id", userData.userCode);
-            const baseUrl = process.env.REACT_APP_EC2_HOST_URI
-                ? `http://${process.env.REACT_APP_EC2_HOST_URI}`
-                : '';
-            navigate(baseUrl + '/');
-            window.location.reload();
+            const currentOrigin = window.location.origin;
+            navigate('/');
+
+            window.location.href = currentOrigin;
         }
     }, [userData, navigate]);
 
