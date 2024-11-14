@@ -26,7 +26,10 @@ const LoginHandler = (props) => {
     useEffect(() => {
         if (userData) {
             setCookie("id", userData.userCode);
-            navigate("/");
+            const baseUrl = process.env.REACT_APP_EC2_HOST_URI
+                ? `http://${process.env.REACT_APP_EC2_HOST_URI}`
+                : '';
+            navigate(baseUrl + '/');
             window.location.reload();
         }
     }, [userData, navigate]);
