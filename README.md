@@ -12,7 +12,7 @@
 
 <br>
 
-### ⚙️ 사용 기술
+## ⚙️ 사용 기술
 - `Gradle`, `Java 17`, `Spring Boot 3`, `Spring Security 6`
 - `MySQL 8`, `JPA`, `Querydsl`, `Redis`
 - `React`, `JavaScript`
@@ -20,7 +20,12 @@
 
 <br>
 
-## 📌 주요 기능
+## 🚀 CI/CD 시스템 아키텍처
+![timetrove_AWS](https://github.com/user-attachments/assets/fe99363b-4c77-4277-950a-7d60ad7b6120)
+
+<br>
+
+## 📌 기능 소개
 
 ### 1. 사용자 인증 및 권한 관리
 - JWT와 OAuth 2.0을 활용한 소셜 로그인 구현
