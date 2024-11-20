@@ -1,5 +1,5 @@
-# TIMETORVE
-![TimeTrove_mainpage](https://github.com/user-attachments/assets/2faffa8f-65d5-48d8-a485-3fa696c3dc2a)
+# TIMETROVE
+![mediamodifier_image_draphed_01_2000x1333](https://github.com/user-attachments/assets/b9498207-32ac-48dd-a15d-ea4d3eda9321)
 
 >  개인 프로젝트
 > 
@@ -44,13 +44,12 @@
 
 ### 4. 장바구니 및 구매 
 - 사용자별 장바구니 관리
-- 상품 구매 프로세스 구현
-- 동시성 제어를 통한 안전한 재고 관리
+- 동시성 제어를 통한 안전한 상품 구매 프로세스 구현
 
 ### 5. 마이페이지 
 - 사용자 정보 조회 및 수정 기능
 - 사용자별 주문 내역 및 활동 조회
-- 최근 작성 댓글 목록 제공
+- 최근 작성 댓글 목록
 
 ### 6. 캐싱 및 성능 최적화
 - Redis를 활용한 사용자 정보 캐싱
@@ -65,3 +64,20 @@
 ### 8. 예외 처리 및 에러 관리
 - 커스텀 예외 처리를 통한 에러 관리
 - JWT 관련 예외 처리로 안전한 토큰 관리
+
+<br>
+
+## 🖥️ 화면 설계
+### [메인 페이지]
+![제목을-입력해주세요_-001](https://github.com/user-attachments/assets/d224643e-1199-41df-a60e-dc33aae49bea)
+
+### [상품 페이지]
+![Timetrove_상품화면설계](https://github.com/user-attachments/assets/a5eeb105-bf84-4822-a258-aa1fb62565b8)
+
+<br>
+
+### [게시판 페이지]
+![Timetrove_게시판화면설계](https://github.com/user-attachments/assets/7433b71a-0b2c-4d7b-a3a9-25bb4e1d4b05)
+
+### [마이 페이지]
+![Timetrove_마이페이지화면설계](https://github.com/user-attachments/assets/46fc7206-d9b8-42c0-982c-152b8588a1ee)
