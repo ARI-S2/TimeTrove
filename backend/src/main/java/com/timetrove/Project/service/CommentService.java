@@ -1,9 +1,6 @@
 package com.timetrove.Project.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.timetrove.Project.common.enumType.ErrorCode;
@@ -80,52 +77,53 @@ public class CommentService {
 
     /**
      * 댓글 조회 메서드
-     * 특정 게시글에 속한 댓글을 조회하고 부모 댓글 기준으로 정렬
+     * 특정 게시글에 속한 댓글을 계층구조로 조회
      * @param: Long no
      * @return 댓글 리스트 DTO
      */
     public List<CommentDto> findCommentListByNo(Long no) {
-        List<Comment> commentList = commentRepository.findCommentByNo(no);
-        List<CommentDto> commentDtoList = commentList.stream()
-                .map(CommentDto::convertCommentToDto)
-                .collect(Collectors.toList());
-        return convertNestedStructure(commentDtoList);
+        // 루트 댓글과 자식 댓글들을 한 번에 조회
+        List<Comment> rootComments = commentRepository.findCommentByNo(no);
+        return convertNestedStructure(rootComments);
     }
 
     /**
      * 대댓글 중첩 구조 변환 메서드
-     * 댓글 리스트를 부모-자식 관계로 정리
-     * @param: List<CommentDto> commentDtoList
-     * @return 구조화 된 댓글 리스트 DTO
+     * 댓글 엔티티를 DTO로 변환하며 계층구조와 정렬을 처리
+     * @param: List<Comment> comments
+     * @return 계층구조가 적용된 댓글 리스트 DTO
      */
-    private List<CommentDto> convertNestedStructure(List<CommentDto> commentDtoList) {
-        List<CommentDto> result = new ArrayList<>();
-        Map<Long, CommentDto> map = new HashMap<>();
+    private List<CommentDto> convertNestedStructure(List<Comment> comments) {
+        Map<Long, CommentDto> commentMap = new HashMap<>();
+        List<CommentDto> rootComments = new ArrayList<>();
 
-        commentDtoList.forEach(c -> {
-            map.put(c.getId(), c);
-            if (c.getParentId() != null) {
-                map.get(c.getParentId()).getChildren().add(c);
+        for (Comment comment : comments) {
+            CommentDto dto = CommentDto.convertCommentToDto(comment);
+            commentMap.put(comment.getId(), dto);
+
+            if (comment.getParent() == null) {
+                rootComments.add(dto);
             } else {
-                result.add(c);
+                CommentDto parentDto = commentMap.get(comment.getParent().getId());
+                if (parentDto != null) {
+                    parentDto.getChildren().add(dto);
+                }
             }
-        });
+        }
 
-        printChildComments(result);
-        return result;
+        return rootComments;
     }
 
     /**
-     * 자식 댓글을 출력하는 메서드
-     * @param: List<CommentDto> commentDtoList
+     * 댓글 출력을 위한 메서드 (디버깅/로깅 용도)
      */
-    private void printChildComments(List<CommentDto> commentDtoList) {
-        for (CommentDto commentDto : commentDtoList) {
-            System.out.println("  - " + commentDto);
-            if (!commentDto.getChildren().isEmpty()) {
-                printChildComments(commentDto.getChildren());
+    private void printChildComments(List<CommentDto> comments) {
+        comments.forEach(comment -> {
+            System.out.println("댓글 ID: " + comment.getId());
+            if (!comment.getChildren().isEmpty()) {
+                printChildComments(comment.getChildren());
             }
-        }
+        });
     }
 
     /**
