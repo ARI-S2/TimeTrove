@@ -3,7 +3,7 @@
 
 >  개인 프로젝트
 > 
-> 2024.7. – 2024.11.
+> 2024.7. – 2024.12.
 
 <br>
 
@@ -36,7 +36,7 @@
 - 시계 목록 조회 및 상세보기
 - 동적 검색 및 필터링 기능 (Querydsl 활용)
 - 비관적 락을 통한 동시성 제어로 안정적인 재고 관리
-- 장바구니 및 KakaoPay API 구매
+- 장바구니 및 포트원 API 구매
 
 ### 3. 게시판 및 댓글 
 - 게시글 CRUD 기능
@@ -55,7 +55,7 @@
 - React-Query로 클라이언트 측에 상품 목록을 캐싱해 API 호출 최소화
   
 ### 6. 실시간 랭킹 기능
-- 판매량, 조회수 별 가중치를 부여한 인기 상품 랭킹 기능
+- 조회수 기반 인기 상품 랭킹 기능
 - Hacker News Ranking 알고리즘을 활용한 실시간 인기글 기능
 
 ### 7. 예외 처리 및 에러 관리
@@ -237,6 +237,17 @@ public void processPurchase(List<CartDto> cartDtoList) {
 </div>
 </details>
 
+
+### [멱등성 키를 활용하여 중복 결제 방지하기]
+<details>
+<summary> 자세히 알아보기 </summary>
+<div markdown="1">
+  
+![Image](https://github.com/user-attachments/assets/7089e9ee-271e-4300-b4db-2a00bd0ef3fa)
+  
+</div>
+</details>
+
 ### [Redis TTL을 활용하여 Refresh Token이 DB에 쌓이는 문제 방지]
 <details>
 <summary> 자세히 알아보기 </summary>
@@ -334,6 +345,16 @@ public TokenDto reIssueTokens(String refreshToken) {
 3. 스프링 시큐리티와 JWT를 이용한 인증 구현
 4. 프론트엔드와 백엔드의 통합적인 예외 처리 방법
 
+</div>
+</details>
+
+### [복합 인덱스로 구매 내역 조회 성능 개선하기]
+<details>
+<summary> 자세히 알아보기 </summary>
+<div markdown="1">
+  
+![Image](https://github.com/user-attachments/assets/3720d9b7-d612-4f45-8782-abcf33589284)
+  
 </div>
 </details>
 
