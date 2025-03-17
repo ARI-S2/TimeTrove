@@ -22,10 +22,16 @@ public enum ErrorCode {
 
     // 404: Not Found Errors
     USER_NOT_FOUND("400_USER_NOT_FOUND", "사용자를 찾을 수 없습니다."),
-    WATCH_NOT_FOUND("401_WATCH_NOT_FOUND", "상품을 찾을 수 없습니다."),
+    PRODUCT_NOT_FOUND("401_PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다."),
     CART_NOT_FOUND("402_CART_NOT_FOUND", "장바구니를 찾을 수 없습니다."),
     BOARD_NOT_FOUND("403_BOARD_NOT_FOUND", "게시글을 찾을 수 없습니다."),
-    COMMENT_NOT_FOUND("404_COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다.");
+    COMMENT_NOT_FOUND("404_COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다."),
+    ORDER_NOT_FOUND("405_ORDER_NOT_FOUND", "주문정보를 찾을 수 없습니다."),
+
+    // 결제 관련 오류 코드
+    PAYMENT_AMOUNT_MISMATCH("PAY_001", "결제 금액이 일치하지 않습니다."),
+    MISSING_IDEMPOTENCY_KEY("PAY_002", "결제 요청에 멱등성 키가 필요합니다."),
+    DUPLICATE_PAYMENT("PAY_003", "이미 처리된 결제 요청입니다.");
 
     private final String code;
     private final String msg;

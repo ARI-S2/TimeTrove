@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "user_timetrove")
 public class User {
     @Id
     @Column(name = "user_code")

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 
@@ -33,5 +34,9 @@ public class Board {
 
     public void increaseScore() {
         this.score += 1;
+    }
+
+    public void increaseScore(int amount) {
+        this.score += amount;
     }
 }

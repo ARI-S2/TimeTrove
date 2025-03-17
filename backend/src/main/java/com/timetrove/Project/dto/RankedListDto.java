@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class RankedListDto {
-    private List<WatchDto> topWatchList;
+    private List<ProductDto> topProductList;
     private List<BoardDto> topBoardList;
 }

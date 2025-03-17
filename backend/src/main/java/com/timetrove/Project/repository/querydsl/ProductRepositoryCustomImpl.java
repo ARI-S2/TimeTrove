@@ -2,8 +2,8 @@ package com.timetrove.Project.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.timetrove.Project.domain.QWatch;
-import com.timetrove.Project.domain.Watch;
+import com.timetrove.Project.domain.Product;
+import com.timetrove.Project.domain.QProduct;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,40 +11,40 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WatchRepositoryCustomImpl implements WatchRepositoryCustom {
+public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public WatchRepositoryCustomImpl(EntityManager em) {
+    public ProductRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override
-    public Page<Watch> findWatchesWithFilter(String searchWord, String filter, Pageable pageable) {
-        QWatch watch = QWatch.watch;
+    public Page<Product> findProductsWithFilter(String searchWord, String filter, Pageable pageable) {
+        QProduct product = QProduct.product;
 
-        JPAQuery<Watch> query = queryFactory
-                .selectFrom(watch)
+        JPAQuery<Product> query = queryFactory
+                .selectFrom(product)
                 .where(
                         searchWord != null && !searchWord.isEmpty() ?
-                                watch.name.containsIgnoreCase(searchWord)
-                                        .or(watch.model.containsIgnoreCase(searchWord))
+                                product.productName.containsIgnoreCase(searchWord)
+                                        .or(product.model.containsIgnoreCase(searchWord))
                                 : null
                 );
 
         // 정렬 조건 적용
         switch (filter) {
-            case "hit":
-                query.orderBy(watch.viewCount.desc());
-                break;
+//            case "hit":
+//                query.orderBy(product.viewCount.desc());
+//                break;
             case "priceHigh":
-                query.orderBy(watch.soldPrice.desc());
+                query.orderBy(product.price.desc());
                 break;
             case "priceLow":
-                query.orderBy(watch.soldPrice.asc());
+                query.orderBy(product.price.asc());
                 break;
             default:
-                query.orderBy(watch.id.desc());
+                query.orderBy(product.productId.desc());
         }
 
         // 페이지네이션 적용
@@ -52,12 +52,12 @@ public class WatchRepositoryCustomImpl implements WatchRepositoryCustom {
 
         // 전체 카운트 쿼리
         JPAQuery<Long> countQuery = queryFactory
-                .select(watch.count())
-                .from(watch)
+                .select(product.count())
+                .from(product)
                 .where(
                         searchWord != null && !searchWord.isEmpty() ?
-                                watch.name.containsIgnoreCase(searchWord)
-                                        .or(watch.model.containsIgnoreCase(searchWord))
+                                product.productName.containsIgnoreCase(searchWord)
+                                        .or(product.model.containsIgnoreCase(searchWord))
                                 : null
                 );
 

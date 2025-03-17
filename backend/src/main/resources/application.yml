@@ -15,6 +15,11 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
 
+imp:
+  api:
+    key: ${IMP_API_KEY}
+    secretkey: ${IMP_API_SECRET}
+
 logging:
   level:
     org.springframework.security: INFO

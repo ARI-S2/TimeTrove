@@ -1,6 +1,7 @@
 package com.timetrove.Project.dto;
 
 import com.timetrove.Project.domain.Cart;
+import com.timetrove.Project.domain.Product;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -17,36 +18,39 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CartDto {
-    private Long id;
+    private Long cartId;
     private Long userCode;
-    @NonNull
-    private Long watchId;
-    private String watchName;
-    private String watchImage;
-	private Long watchPrice;
-	private String watchModel;
-	
+    private Long productId;
+    private String productName;
+    private String productImage;
+    private Long price;
+    private String model;
     private Long quantity;
-    private boolean purchased;
-    private LocalDateTime purchaseDate;
     private Long totalPrice;
-
+    private Long inventoryId;
+    private Long productStock;
+    private boolean isSoldOut;
 
     public static CartDto convertCartToDto(Cart cart) {
         CartDto cartDto = new CartDto();
-        cartDto.setId(cart.getId());
-        cartDto.setWatchId(cart.getWatch().getId());
-        cartDto.setWatchName(cart.getWatch().getName());
-        cartDto.setWatchImage(cart.getWatch().getImage());
-        cartDto.setWatchPrice(cart.getWatch().getSoldPrice());
-        cartDto.setWatchModel(cart.getWatch().getModel());
+        Product product = cart.getProductManagement().getProduct();
+
+        cartDto.setCartId(cart.getCartId());
+        cartDto.setUserCode(cart.getUser().getUserCode());
+        cartDto.setProductId(product.getProductId());
+        cartDto.setProductName(product.getProductName());
+        cartDto.setProductImage(product.getImage());
+        cartDto.setPrice(cart.getPrice());
+        cartDto.setModel(product.getModel());
         cartDto.setQuantity(cart.getQuantity());
-        cartDto.setPurchased(cart.isPurchased());
-        cartDto.setPurchaseDate(cart.getPurchaseDate());
-        cartDto.setTotalPrice(cart.getQuantity() * cart.getWatch().getSoldPrice());
+        cartDto.setTotalPrice(cart.getQuantity() * cart.getPrice());
+        cartDto.setInventoryId(cart.getProductManagement().getInventoryId());
+        cartDto.setProductStock(cart.getProductManagement().getQuantity());
+        cartDto.setSoldOut(cart.getProductManagement().isSoldOut());
+
         return cartDto;
     }
-    
+
     public static List<CartDto> convertCartListToDto(List<Cart> cartList) {
         return cartList.stream()
                 .map(CartDto::convertCartToDto)

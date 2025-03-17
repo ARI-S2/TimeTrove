@@ -31,7 +31,7 @@ public class MypageService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userinfo", UserDto.convertUserToDto(userRepository.findByUserCode(userCode)));
 		map.put("cartList", CartDto.convertCartListToDto(
-				cartRepository.findByUser_UserCodeAndPurchasedOrderByPurchaseDateDesc(userCode, false)));
+				cartRepository.findByUser_UserCodeOrderByCartIdDesc(userCode)));
 		return map;
 	}
 

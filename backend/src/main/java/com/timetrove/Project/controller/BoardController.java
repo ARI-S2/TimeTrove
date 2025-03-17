@@ -4,6 +4,8 @@ import com.timetrove.Project.dto.BoardDto;
 import com.timetrove.Project.dto.PageResponse;
 import com.timetrove.Project.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +37,16 @@ public class BoardController {
 
     /**
      * @param no 게시글 번호
+     * @param request HttpServletRequest 객체
+     * @param response HttpServletResponse 객체
      * @return 게시글 상세 정보
      */
     @Operation(summary = "게시글 상세 조회", description = "특정 번호의 게시글을 조회하고 조회수를 증가합니다.")
     @GetMapping("/{no}")
-   public ResponseEntity<BoardDto> boardDetailData(@PathVariable("no") Long no){
-	   return ResponseEntity.ok().body(boardService.getBoardByNo(no));
-   }
+    public ResponseEntity<BoardDto> boardDetailData(
+            @PathVariable("no") Long no,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        return ResponseEntity.ok().body(boardService.getBoardByNo(no, request, response));
+    }
 }

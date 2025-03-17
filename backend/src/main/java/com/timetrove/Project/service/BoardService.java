@@ -6,6 +6,9 @@ import com.timetrove.Project.domain.Board;
 import com.timetrove.Project.dto.BoardDto;
 import com.timetrove.Project.dto.PageResponse;
 import com.timetrove.Project.repository.BoardRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,15 +32,38 @@ public class BoardService {
 	 * @param: Long no - 게시글 번호
 	 * @return 게시글 DTO
 	 */
-	public BoardDto getBoardByNo(Long no) {
+	public BoardDto getBoardByNo(Long no, HttpServletRequest request, HttpServletResponse response) {
 		Board board = boardRepository.findById(no)
 				.orElseThrow(() -> new EntityNotFoundException(HttpStatus.NOT_FOUND, ErrorCode.BOARD_NOT_FOUND));
 
-		board.increaseScore();
-		boardRepository.save(board);
-		rankingService.updateBoardScore(board);
+		// 쿠키를 확인하여 조회수 중복 방지 처리
+		if (!isBoardAlreadyViewed(no, request)) {
+			rankingService.updateBoardScore(board);
+			// 새로운 쿠키 생성
+			addBoardViewCookie(no, response);
+		}
 
 		return BoardDto.convertBoardToDto(board);
+	}
+
+	private boolean isBoardAlreadyViewed(Long no, HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("boardView") && cookie.getValue().contains("[" + no + "]")) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private void addBoardViewCookie(Long no, HttpServletResponse response) {
+		Cookie cookie = new Cookie("boardView", "[" + no + "]");
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+		cookie.setMaxAge(24 * 60 * 60); // 1일 동안 유지
+		response.addCookie(cookie);
 	}
 
 	/**

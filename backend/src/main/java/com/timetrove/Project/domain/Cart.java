@@ -1,42 +1,45 @@
 package com.timetrove.Project.domain;
 
-import java.time.LocalDateTime;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Table(name = "cart")
 public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "cart_id")
+    private Long cartId; // PK
 
     @ManyToOne
-    @JoinColumn(name = "user_code", referencedColumnName = "user_code")
-    private User user;
+    @JoinColumn(name = "user_code", referencedColumnName = "user_code", nullable = false)
+    private User user; // 회원
 
     @ManyToOne
-    @JoinColumn(name = "watch_id", referencedColumnName = "watch_id")
-    private Watch watch;
+    @JoinColumn(name = "Product_Mgt_id", nullable = false)
+    private ProductManagement productManagement; // 상품
 
-    private Long quantity;
-    private boolean purchased;
-    
-    @Column(name = "purchase_date")
-    private LocalDateTime purchaseDate;
+    @Setter
+    @Column(name = "quantity", nullable = false)
+    private Long quantity; // 수량
 
-    @Builder
-    public Cart(User user, Watch watch, Long quantity, boolean purchased, LocalDateTime purchaseDate) {
+    @Setter
+    @Column(name = "price", nullable = false)
+    private Long price; // 가격
+
+    public Cart(User user, ProductManagement productManagement, Long quantity, Long price) {
         this.user = user;
-        this.watch = watch;
+        this.productManagement = productManagement;
         this.quantity = quantity;
-        this.purchased = purchased;
-        this.purchaseDate = purchaseDate;
+        this.price = price;
     }
+
+    public Cart() {
+
+    }
+
 }

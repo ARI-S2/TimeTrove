@@ -69,12 +69,12 @@ function Footer() {
                         </li>
                         <li className="footer-menuitem">
                             <a href="/footer-menu1">
-                                <span>푸터메뉴1</span>
+                                <span>제품소개</span>
                             </a>
                         </li>
                         <li className="footer-menuitem">
                             <a href="/footer-menu2">
-                                <span>푸터메뉴2</span>
+                                <span>커뮤니티</span>
                             </a>
                         </li>
                     </ul>
@@ -103,14 +103,12 @@ function Footer() {
                 </div>
                 <div className="footer-bottom">
                     <div className="footer-txt">
-                        <p>서울시 영등포구 선유로70 우리벤처타운2 705호</p>
                         <p>
-                            <span>T. 070-8872-8874</span>
-                            <span>E. help@openfield.co.kr</span>
+                            <span>E. duswl966@gmail.com</span>
                         </p>
                     </div>
                     <div className="footer-txt">
-                        <p>2022 BY TEMPLATEHOUSE. ALL RIGHTS RESERVED</p>
+                        <p>2024 BY TIMETROVE. ALL RIGHTS RESERVED</p>
                     </div>
                 </div>
             </div>

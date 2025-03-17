@@ -1,38 +1,49 @@
 package com.timetrove.Project.service;
 
 import com.timetrove.Project.domain.Board;
-import com.timetrove.Project.domain.Watch;
+import com.timetrove.Project.domain.Product;
 import com.timetrove.Project.dto.BoardDto;
 import com.timetrove.Project.dto.RankedListDto;
-import com.timetrove.Project.dto.WatchDto;
+import com.timetrove.Project.dto.ProductDto;
 import com.timetrove.Project.repository.BoardRepository;
-import com.timetrove.Project.repository.querydsl.WatchRepository;
+import com.timetrove.Project.repository.ProductManagementRepository;
+import com.timetrove.Project.repository.querydsl.ProductRepository;
 import com.timetrove.Project.repository.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RankingService {
-    private static final String WATCH_RANKING_KEY = "watch_ranking";
+    private static final String PRODUCT_RANKING_KEY = "product_ranking";
     private static final String BOARD_RANKING_KEY = "board_ranking";
 
     private final RedisRepository redisRepository;
-    private final WatchRepository watchRepository;
+    private final ProductManagementRepository productManagementRepository;
+    private final ProductRepository productRepository;
     private final BoardRepository boardRepository;
 
+    // 배치 작업 관련 상수 추가
+    private static final long BATCH_SYNC_INTERVAL = 15; // 15분마다 배치 동기화
+
+    // 변경된 데이터를 기록하기 위한 Set
+    private final Set<Long> updatedProductIds = ConcurrentHashMap.newKeySet();
+    private final Set<Long> updatedBoardIds = ConcurrentHashMap.newKeySet();
+
     /**
-     * 상위 3개의 게시글과 상위 6개의 시계 목록을 반환하는 메서드
+     * 상위 3개의 게시글과 상위 6개의 상품 목록을 반환하는 메서드
      * @return RankedListDto
      */
-    public RankedListDto getRanked3BoardsAnd6Watches() {
+    public RankedListDto getRanked3BoardsAnd6Products() {
         return RankedListDto.builder()
-                .topWatchList(getTop6Watches())
+                .topProductList(getTop6Products())
                 .topBoardList(getTop3Boards())
                 .build();
     }
@@ -42,8 +53,10 @@ public class RankingService {
      * @param: Board board - 점수를 업데이트할 게시글
      */
     public void updateBoardScore(Board board) {
-        double score = calculateBoardScore(board);
-        redisRepository.incrementScore(BOARD_RANKING_KEY, board.getNo().toString(), score);
+        redisRepository.incrementScore(BOARD_RANKING_KEY, board.getNo().toString(), 1.0);
+
+        // 업데이트된 게시글 ID 기록
+        updatedBoardIds.add(board.getNo());
     }
 
     /**
@@ -81,42 +94,30 @@ public class RankingService {
     }
 
     /**
-     * 랭킹을 위한 시계 점수 업데이트 메서드
-     * @param: Long watchId - 점수를 업데이트할 시계 ID
+     * 랭킹을 위한 상품 점수 업데이트 메서드
+     * @param: Long ProductId - 점수를 업데이트할 상품 ID
      */
-    public void updateWatchScore(Long watchId) {
-        double score = calculateWatchScore(watchRepository.findByWatchId(watchId));
-        redisRepository.incrementScore(WATCH_RANKING_KEY, watchId.toString(), score);
+    public void updateProductScore(Long productId) {
+        redisRepository.incrementScore(PRODUCT_RANKING_KEY, productId.toString(), 1.0);
+
+        // 업데이트된 상품 ID 기록
+        updatedProductIds.add(productId);
     }
 
-    /**
-     * 시계 점수 계산 메서드
-     * @param: Watch watch - 점수를 계산할 시계
-     * @return 계산된 점수
-     */
-    private double calculateWatchScore(Watch watch) {
-        double viewWeight = 1;
-        double cartWeight = 3;
-        double purchaseWeight = 5;
-
-        return (watch.getViewCount() * viewWeight) +
-                (watch.getCartCount() * cartWeight) +
-                (watch.getPurchaseCount() * purchaseWeight);
-    }
 
     /**
-     * 상위 6개의 시계 ID 조회 및 변환 메서드
-     * @return WatchDto 리스트
+     * 상위 6개의 상품 ID 조회 및 변환 메서드
+     * @return ProductDto 리스트
      */
-    public List<WatchDto> getTop6Watches() {
-        Set<Object> topWatchIdsSet = redisRepository.getTopRankedItems(WATCH_RANKING_KEY, 6);
+    public List<ProductDto> getTop6Products() {
+        Set<Object> topProductIdsSet = redisRepository.getTopRankedItems(PRODUCT_RANKING_KEY, 6);
 
-        return topWatchIdsSet.stream()
+        return topProductIdsSet.stream()
                 .map(this::safelyParseLong)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(watchId -> watchRepository.findById(watchId)
-                        .map(WatchDto::convertWatchToDto)
+                .map(productId -> productRepository.findById(productId)
+                        .map(ProductDto::convertProductToDto)
                         .orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -141,4 +142,65 @@ public class RankingService {
             return Optional.empty();
         }
     }
+
+    /**
+     * Redis 데이터를 RDB로 주기적으로 동기화하는 배치 메서드
+     * Spring Scheduled 어노테이션을 사용하여 스케줄링
+     */
+    @Scheduled(fixedRate = BATCH_SYNC_INTERVAL * 60 * 1000) // 분 단위를 밀리초로 변환
+    public void syncRedisToRDB() {
+        syncProductDataToRDB();
+        syncBoardDataToRDB();
+    }
+
+    /**
+     * 상품 조회수 데이터를 RDB에 동기화하는 메서드
+     */
+    private void syncProductDataToRDB() {
+        // 변경된 상품 ID가 없으면 처리하지 않음
+        if (updatedProductIds.isEmpty()) {
+            return;
+        }
+
+        // Redis에서 현재 상품 점수 가져오기
+        for (Long productId : updatedProductIds) {
+            Double score = redisRepository.getScore(PRODUCT_RANKING_KEY, productId.toString());
+            if (score != null) {
+                // 상품 조회수 업데이트
+                productManagementRepository.findById(productId).ifPresent(productManagement -> {
+                    productManagement.increaseViewCount(score.intValue());
+                    productManagementRepository.save(productManagement);
+                });
+            }
+        }
+
+        // 처리 완료된 ID 목록 초기화
+        updatedProductIds.clear();
+    }
+
+    /**
+     * 게시글 점수 데이터를 RDB에 동기화하는 메서드
+     */
+    private void syncBoardDataToRDB() {
+        // 변경된 게시글 ID가 없으면 처리하지 않음
+        if (updatedBoardIds.isEmpty()) {
+            return;
+        }
+
+        // Redis에서 현재 게시글 점수 가져오기
+        for (Long boardId : updatedBoardIds) {
+            Double score = redisRepository.getScore(BOARD_RANKING_KEY, boardId.toString());
+            if (score != null) {
+                // 게시글 점수 업데이트
+                boardRepository.findById(boardId).ifPresent(board -> {
+                    board.increaseScore(score.intValue());
+                    boardRepository.save(board);
+                });
+            }
+        }
+
+        // 처리 완료된 ID 목록 초기화
+        updatedBoardIds.clear();
+    }
+
 }
